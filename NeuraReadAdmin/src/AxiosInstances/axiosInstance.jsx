@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstances = axios.create({
-  baseURL: 'http://localhost:7272/api/v1/',
+  baseURL: 'https://bdo-bank.onrender.com/api/v1/',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
