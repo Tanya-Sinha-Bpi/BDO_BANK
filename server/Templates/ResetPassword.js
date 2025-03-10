@@ -239,8 +239,8 @@ export const sendLink=(name,link)=>{
 <tr>
 <td class="pad">
 <div style="color:#4a60bb;font-family:'Varela Round', 'Trebuchet MS', Helvetica, sans-serif;font-size:12px;line-height:120%;text-align:center;mso-line-height-alt:14.399999999999999px;">
-<p style="margin: 0; word-break: break-word;"><span style="word-break: break-word;">Copyright © 2024  ShopEase, All rights reserved.<br/><br/>Visit us at: Fatwah, Patna, Bihar, India 803201.<br/></span></p>
-<p style="margin: 0; word-break: break-word;"><span style="word-break: break-word;">For any inquiries, please reach out to our support team at support@shopease.com.</span></p>
+<p style="margin: 0; word-break: break-word;"><span style="word-break: break-word;">Copyright © 2024  BDO, All rights reserved.<br/><br/>Visit us at: Phillipinse, send, Phillipinse, Phillipinse 50000.<br/></span></p>
+<p style="margin: 0; word-break: break-word;"><span style="word-break: break-word;">For any inquiries, please reach out to our support team at support@bdo.com.</span></p>
 <p style="margin: 0; word-break: break-word;"><span style="word-break: break-word;"><br/><br/></span></p>
 </div>
 </td>
