@@ -84,7 +84,7 @@ const Header = () => {
                   variant="caption"
                   sx={{ color: "#2196f3", fontWeight: "bold", pt: 0.2 }}
                 >
-                  NEURAREAD
+                  BDO BANK
                 </Typography>
               </Box>
               <Box
@@ -113,6 +113,14 @@ const Header = () => {
                   onClick={() => navigate("/profile")}
                 >
                   Profile
+                </Button>
+                <Button
+                  variant="text"
+                  color="info"
+                  size="small"
+                  onClick={() => navigate("/dublicate-finder")}
+                >
+                  Duplicate DB
                 </Button>
               </Box>
             </Box>

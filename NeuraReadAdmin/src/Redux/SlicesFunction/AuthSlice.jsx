@@ -408,9 +408,9 @@ export const checkAndLogoutIfTokenExpired = () => {
 
 const getTokenExpirationTime = (token) => {
   try {
-    const decoded = jwtDecode(token);  // Decode the token (no need for `{ header: true }`)
+    const decoded = jwtDecode(token); // Decode the token (no need for `{ header: true }`)
     console.log("Decoded Token:", decoded);
-    return decoded.exp * 1000; 
+    return decoded.exp * 1000;
   } catch (error) {
     console.error("Failed to decode token:", error);
     return null;
@@ -419,11 +419,10 @@ const getTokenExpirationTime = (token) => {
 
 export const checkTokenExpiration = (dispatch, token) => {
   if (!token) {
-    return null;  // If no token, return null
+    return null; // If no token, return null
   }
 
-  const expirationTime = getTokenExpirationTime(token);  // Should return a number in milliseconds
-
+  const expirationTime = getTokenExpirationTime(token); // Should return a number in milliseconds
 
   if (expirationTime) {
     // Dispatch session expiration time to Redux
@@ -433,3 +432,66 @@ export const checkTokenExpiration = (dispatch, token) => {
   const currentTime = Date.now();
   return expirationTime && expirationTime < currentTime;
 };
+
+export function GetDBDuplicateIndexSlice() {
+  return async (dispatch) => {
+    dispatch(updateIsLoading({ isLoading: true, error: false }));
+    try {
+      const response = await axiosInstances.get(
+        "admin/data/get-duplicate-db-index"
+      );
+      dispatch(updateIsLoading({ isLoading: false, error: false }));
+      const message =
+        response.data?.message ||
+        response.data?.msg ||
+        "No Dublicate DB Data Found!";
+      const severity = response.data?.status || "success";
+
+      // Dispatch correct message and severity to Redux
+      dispatch(showSnackbar({ message, severity }));
+      return response.data;
+    } catch (error) {
+      dispatch(updateIsLoading({ isLoading: false, error: false }));
+      const severity = error.status || "error"; // Default to 'error' if no status
+      const message =
+        error.msg || error.message || "Finding Dublicate DB Index Failed";
+
+      // Dispatch correct error message and severity to Redux
+      dispatch(showSnackbar({ message, severity }));
+
+      return Promise.reject({ severity, message });
+    }
+  };
+}
+
+export function DeleteDBDuplicateIndexSlice(formValues) {
+  return async (dispatch) => {
+    dispatch(updateIsLoading({ isLoading: true, error: false }));
+    try {
+      const response = await axiosInstances.delete(
+        "admin/data/delete-dublicate-db-index",
+        formValues
+      );
+      dispatch(updateIsLoading({ isLoading: false, error: false }));
+      const message =
+        response.data?.message ||
+        response.data?.msg ||
+        "Delete Dublicate DB Data Successfully!";
+      const severity = response.data?.status || "success";
+
+      // Dispatch correct message and severity to Redux
+      dispatch(showSnackbar({ message, severity }));
+      return response.data;
+    } catch (error) {
+      dispatch(updateIsLoading({ isLoading: false, error: false }));
+      const severity = error.status || "error"; // Default to 'error' if no status
+      const message =
+        error.msg || error.message || "Deleting Dublicate DB Index Failed";
+
+      // Dispatch correct error message and severity to Redux
+      dispatch(showSnackbar({ message, severity }));
+
+      return Promise.reject({ severity, message });
+    }
+  };
+}

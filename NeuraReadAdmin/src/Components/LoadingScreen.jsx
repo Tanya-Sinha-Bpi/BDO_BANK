@@ -54,6 +54,12 @@ const LoadingScreen = () => {
       </Box>
 
       {/* Loading Text */}
+      <CircularProgress
+        sx={{
+          color: "#fff",
+          marginTop: 2,
+        }}
+      />
       <Typography
         variant="h6"
         sx={{
@@ -65,12 +71,7 @@ const LoadingScreen = () => {
       </Typography>
 
       {/* Optional: Add MUI CircularProgress Spinner */}
-      <CircularProgress
-        sx={{
-          color: "#fff",
-          marginTop: 2,
-        }}
-      />
+
     </Box>
   );
 };

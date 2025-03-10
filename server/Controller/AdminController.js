@@ -5,7 +5,8 @@ import moment from "moment";
 import jwt from 'jsonwebtoken';
 import mongoose from "mongoose";
 import filterObj from "../Utils/FilterData.js";
-
+import { Schema } from 'mongoose';
+import DataBaseConnection from "../Utils/DBConnection.js";
 const signToken = (userId) => {
   // Specify the expiration time, e.g., '1h' for one hour
   return jwt.sign({ userId }, process.env.JWT_SECRET, {
@@ -716,6 +717,81 @@ export const AdminResetPassword = async (req, res) => {
     });
 
   } catch (error) {
+    return res.status(500).json({
+      status: 'error',
+      message: error.message || 'Server error'
+    });
+  }
+}
+
+await DataBaseConnection();
+
+export const GetDuplicateIndex = async (req, res) => {
+  try {
+    const connection = mongoose.connection;
+    const duplicateIndexes = await connection.db.collection('system.indexes').aggregate([
+      {
+        $group: {
+          _id: { ns: "$ns", name: "$name" },
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $match: { count: { $gt: 1 } }
+      }
+    ]).toArray();
+
+    if (duplicateIndexes.length === 0) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'No duplicate indexes found'
+      });
+    }
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'Successfully found duplicate indexes',
+      data: duplicateIndexes
+    });
+  } catch (error) {
+    console.log('server error', error);
+    return res.status(500).json({
+      status: 'error',
+      message: error.message || 'Server error'
+    })
+  }
+}
+
+export const DeleteDuplicateIndex = async (req, res) => {
+  try {
+    const { ns, indexName } = req.body;
+
+    // Validate input
+    if (!ns || !indexName) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Index name and namespace (NS) are required'
+      });
+    }
+
+    const connection = mongoose.connection;
+
+    const collectionExists = await connection.db.listCollections({ name: ns }).hasNext();
+    if (!collectionExists) {
+      return res.status(404).json({
+        status: 'error',
+        message: `Collection with namespace ${ns} does not exist`
+      });
+    }
+
+    await connection.db.collection(ns).dropIndex(indexName);
+
+    return res.status(200).json({
+      status: 'success',
+      message: `Successfully deleted duplicate index: ${indexName}`
+    });
+  } catch (error) {
+    console.log('Server error:', error);
     return res.status(500).json({
       status: 'error',
       message: error.message || 'Server error'

@@ -35,7 +35,7 @@ const DashboardLayout = () => {
 
         <Box
           sx={{
-            mt: 2,
+            mt: 5,
             display: "flex",
             justifyContent: "center",
             paddingRight: 3,

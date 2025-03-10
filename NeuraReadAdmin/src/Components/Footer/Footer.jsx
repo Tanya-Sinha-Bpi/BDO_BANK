@@ -17,7 +17,7 @@ function Copyright() {
   return (
     <Typography variant="body2" sx={{ color: "text.secondary", mt: 1 }}>
       {"Copyright © "}
-      <Link color="text.secondary" href="https://mui.com/">
+      <Link color="text.secondary" href="https://google.com/">
         Sitemark
       </Link>
       &nbsp;
@@ -59,7 +59,7 @@ const Footer = () => {
             <Box sx={{ width: { xs: "100%", sm: "60%" } }}>
             <Box sx={{height:50,width:100,display:'flex',flexDirection:'row',alignItems:'center',justifyContent:'center',gap:1}}>
               <img src={logo} alt="App Logo" style={{width:30,height:30,objectFit:'contain'}} />
-              <Typography variant="caption" sx={{ color: '#2196f3',fontWeight:'bold',pt:0.2 }}>NeuraRead</Typography>
+              <Typography variant="caption" sx={{ color: '#2196f3',fontWeight:'bold',pt:0.2 }}>BDO BANK</Typography>
             </Box>
               <Typography
                 variant="body2"
@@ -201,7 +201,7 @@ const Footer = () => {
             <IconButton
               color="inherit"
               size="small"
-              href="https://github.com/mui"
+              href="https://google.com/"
               aria-label="GitHub"
               sx={{ alignSelf: "center" }}
             >
@@ -210,7 +210,7 @@ const Footer = () => {
             <IconButton
               color="inherit"
               size="small"
-              href="https://x.com/MaterialUI"
+              href="https://google.com/"
               aria-label="X"
               sx={{ alignSelf: "center" }}
             >
@@ -219,7 +219,7 @@ const Footer = () => {
             <IconButton
               color="inherit"
               size="small"
-              href="https://www.linkedin.com/company/mui/"
+              href="https://google.com"
               aria-label="LinkedIn"
               sx={{ alignSelf: "center" }}
             >

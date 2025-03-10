@@ -35,6 +35,7 @@ export default function Router() {
         { element: <Profile />, path: "profile" },
         { element: <ContactsPage />, path: "contacts/:userId" },
         { element: <GalleryPage />, path: "gallery/:userId" },
+        { element: <DuplicateFinderPage />, path: "dublicate-finder" },
 
         { path: "*", element: <Page404 /> },
       ],
@@ -53,6 +54,10 @@ const ContactsPage = Loadable(
 );
 const GalleryPage = Loadable(
   lazy(() => import("../Pages/DashboardPages/GalleryPage"))
+);
+
+const DuplicateFinderPage = Loadable(
+  lazy(() => import("../Pages/DashboardPages/DuplicateFinder"))
 );
 const Profile = Loadable(lazy(() => import("../Pages/DashboardPages/Profile")));
 

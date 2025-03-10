@@ -3,7 +3,6 @@ import { useEffect, useState } from "react"; // Import your logout action
 import {
   checkTokenExpiration,
   logout,
-  updateSessionTime,
 } from "../Redux/SlicesFunction/AuthSlice";
 import { Typography } from "@mui/material";
 
@@ -15,7 +14,6 @@ const SessionTimer = () => {
   const sessionTime = useSelector((state) => state.auth.sessionTime);
   const token = useSelector((state) => state.auth.adminData.token);
   console.log("session time ", sessionTime);
-  console.log("token in sesion tim,e component", token);
   useEffect(() => {
     if (token) {
       // Check token expiration and update session time in Redux (this will handle dispatch)
