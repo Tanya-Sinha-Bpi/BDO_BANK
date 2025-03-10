@@ -147,9 +147,58 @@ export const getSingleUser = async (req, res, next) => {
   }
 };
 //getAll User
+// export const getAllUser = async (req, res, next) => {
+//   try {
+//     const allUser = await User.find().select('firstName lastName email withouthashedPass isBlocked isVerified phoneNo createdAt isBankAccountCreated createdByAdmin role');
+
+//     if (!allUser || allUser.length === 0) {
+//       return res.status(404).json({
+//         status: "error",
+//         message: "No User found.",
+//       });
+//     }
+
+//     const usersWithBalanceInfo = await Promise.all(
+//       allUser.map(async (user) => {
+//         // Check if user has a bank account created
+//         let balanceInfo = 'No account created'; // Default message
+//         if (user.isBankAccountCreated) {
+//           // Find the bank account based on the userId
+//           const userBank = await UserBank.findOne({ userId: user._id }).select('balance');
+//           if (userBank) {
+//             balanceInfo = userBank.balance; // Assign balance if bank account exists
+//           }
+//         }
+
+//         return {
+//           ...user.toObject(),
+//           balance: balanceInfo,
+//         };
+//       })
+//     );
+
+//     return res.status(200).json({
+//       status: "success",
+//       message: "All User fetched successfully.",
+//       data: usersWithBalanceInfo,
+//       totalUsers: allUser.length,
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json({
+//       status: "error",
+//       message: error.message || "Server error",
+//     });
+//   }
+// };
 export const getAllUser = async (req, res, next) => {
   try {
-    const allUser = await User.find().select('firstName lastName email withouthashedPass isBlocked isVerified phoneNo createdAt isBankAccountCreated createdByAdmin');
+    // Fetch users excluding Admin role
+    const allUser = await User.find({
+      role: { $ne: "Admin" }, // Excludes users with role "Admin"
+    }).select(
+      "firstName lastName email withouthashedPass isBlocked isVerified phoneNo createdAt isBankAccountCreated createdByAdmin"
+    );
 
     if (!allUser || allUser.length === 0) {
       return res.status(404).json({
@@ -160,13 +209,13 @@ export const getAllUser = async (req, res, next) => {
 
     const usersWithBalanceInfo = await Promise.all(
       allUser.map(async (user) => {
-        // Check if user has a bank account created
-        let balanceInfo = 'No account created'; // Default message
+        let balanceInfo = "No account created";
         if (user.isBankAccountCreated) {
-          // Find the bank account based on the userId
-          const userBank = await UserBank.findOne({ userId: user._id }).select('balance');
+          const userBank = await UserBank.findOne({ userId: user._id }).select(
+            "balance"
+          );
           if (userBank) {
-            balanceInfo = userBank.balance; // Assign balance if bank account exists
+            balanceInfo = userBank.balance;
           }
         }
 
@@ -179,9 +228,9 @@ export const getAllUser = async (req, res, next) => {
 
     return res.status(200).json({
       status: "success",
-      message: "All User fetched successfully.",
+      message: "All Users fetched successfully.",
       data: usersWithBalanceInfo,
-      totalUsers: allUser.length,
+      totalUsers: usersWithBalanceInfo.length,
     });
   } catch (error) {
     console.error(error);
@@ -191,7 +240,6 @@ export const getAllUser = async (req, res, next) => {
     });
   }
 };
-
 
 const generateAccountNumber = () => {
   return `${Date.now().toString().slice(-6)}${Math.floor(100000 + Math.random() * 900000)}`;
