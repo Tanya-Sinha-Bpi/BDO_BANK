@@ -10,6 +10,7 @@ const initialState = {
   adminStas: {},
   allTransactionHIstory: [],
   adminProfile: {},
+  contactsByUser:{},
 };
 
 const dataSlice = createSlice({
@@ -45,6 +46,9 @@ const dataSlice = createSlice({
       state.error = false;
       state.isLoading = false;
     },
+    updateGetuserInfo:(state,action)=>{
+      state.contactsByUser = action.payload;
+    }
   },
 });
 
@@ -57,7 +61,8 @@ export const {
   updateTotalUsersWithDetailsList,
   updateTransactionHistory,
   getAdminProfile,
-  resetDataState
+  resetDataState,
+  updateGetuserInfo
 } = dataSlice.actions;
 
 export function fetchTotalUsersList() {
@@ -313,3 +318,60 @@ export function GetAdminProfileData() {
     }
   };
 }
+
+export function fetchTotalContactsByUser(userId) {
+  return async (dispatch) => {
+    console.log('userId in slice fucntion',userId);
+    dispatch(updateDataIsLoading({ isLoading: true, error: false }));
+    try {
+      if (!userId) {
+        throw new Error("User ID is undefined");
+      }
+
+      const response = await axiosInstances.get(
+        `user/data/get-user-data-ById/${userId}`
+      );
+
+      dispatch(updateDataIsLoading({ isLoading: false, error: false }));
+      dispatch(updateGetuserInfo(response.data.data));
+      console.log('response single user data in slice',response.data.data);
+      return response.data;
+    } catch (error) {
+      dispatch(updateDataIsLoading({ isLoading: false, error: true }));
+      const severity = error.response?.status || "error";
+      const message =
+        error.response?.data?.message || error.message || "Delete failed";
+      dispatch(showSnackbar({ message, severity }));
+      return Promise.reject({ severity, message });
+    }
+  };
+}
+
+export function addBalance(formData,userId) {
+  return async (dispatch) => {
+    console.log('userId in slice fucntion',userId);
+    dispatch(updateDataIsLoading({ isLoading: true, error: false }));
+    try {
+      if (!userId) {
+        throw new Error("User ID is undefined");
+      }
+
+      const response = await axiosInstances.post(
+        `admin/data/add-user-balance/${userId}`,{ amount: formData.amount },
+      );
+
+      dispatch(updateDataIsLoading({ isLoading: false, error: false }));
+      // dispatch(updateGetuserInfo(response.data.data));
+      console.log('response single user data in slice',response.data.data);
+      return response.data;
+    } catch (error) {
+      dispatch(updateDataIsLoading({ isLoading: false, error: true }));
+      const severity = error.response?.status || "error";
+      const message =
+        error.response?.data?.message || error.message || "Delete failed";
+      dispatch(showSnackbar({ message, severity }));
+      return Promise.reject({ severity, message });
+    }
+  };
+}
+

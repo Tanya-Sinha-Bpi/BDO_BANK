@@ -12,10 +12,14 @@ import {
   TextField,
   Button,
   MenuItem,
-  Stack,
+  Modal,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import {createTransactionByAdminSlice } from "../../Redux/SlicesFunction/DataSlice";
+import {
+  addBalance,
+  createTransactionByAdminSlice,
+  fetchTotalContactsByUser,
+} from "../../Redux/SlicesFunction/DataSlice";
 
 const ContactsPage = () => {
   const { userId } = useParams();
@@ -23,6 +27,11 @@ const ContactsPage = () => {
   const { contactsByUser, isLoading, error } = useSelector(
     (state) => state.adminStats
   );
+  const [open, setOpen] = useState(false);
+  const [amount, setAmount] = useState("");
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const [transaction, setTransaction] = useState({
     fromAccount: "",
@@ -63,10 +72,10 @@ const ContactsPage = () => {
     e.preventDefault();
 
     if (isNaN(transaction.amount) || transaction.amount <= 0) {
-      alert('Please enter a valid amount.');
+      alert("Please enter a valid amount.");
       return;
     }
- 
+
     const transactionData = {
       fromAccountId: userId, // The user ID from URL params (sender's user ID)
       toAccountDetails:
@@ -83,7 +92,7 @@ const ContactsPage = () => {
       bankType: transaction.bankType,
       note: transaction.note,
     };
-    console.log('submitted data',transactionData)
+    console.log("submitted data", transactionData);
     // Dispatch the action to create a transaction
     dispatch(createTransactionByAdminSlice(transactionData));
 
@@ -96,6 +105,27 @@ const ContactsPage = () => {
       return null;
     }
     return `${firstName[0]}${lastName[0]}`.toUpperCase();
+  };
+
+  const handleSubmitAmount = (e) => {
+    e.preventDefault();
+    if (!amount || Number(amount) <= 0) {
+      console.log("Invalid amount");
+      return;
+    }
+  
+    console.log("User ID:", userId, "Amount:", amount);
+  
+    dispatch(addBalance({ amount }, userId)) // ✅ Pass correctly formatted data
+      .then(() => {
+        window.alert("Balance added successfully");
+        console.log("Balance added successfully!");
+        handleClose();
+      })
+      .catch((err) => {
+        window.alert('something error in adding balance')
+        console.error("Error updating balance:", err);
+      });
   };
 
   if (isLoading) {
@@ -225,8 +255,53 @@ const ContactsPage = () => {
                   <>❌ Account Verified: No</>
                 )}
               </Typography>
+
+              <Box sx={{ paddingY: 5 }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                  sx={{ fontSize: 13 }}
+                  onClick={handleOpen} // Pass event
+                >
+                  Add Balance for this User
+                </Button>
+              </Box>
             </CardContent>
           </Card>
+
+          <Modal open={open} onClose={handleClose} aria-labelledby="add-balance-modal">
+        <Box sx={{ 
+          position: "absolute", 
+          top: "50%", 
+          left: "50%", 
+          transform: "translate(-50%, -50%)", 
+          width: 400, 
+          bgcolor: "background.paper", 
+          p: 4, 
+          boxShadow: 24, 
+          borderRadius: 2 
+        }}>
+          <Typography id="add-balance-modal" variant="h6" sx={{ mb: 2 }}>
+            Add Balance
+          </Typography>
+
+          <form onSubmit={handleSubmitAmount}>
+            <TextField
+              label="Enter Amount"
+              type="number"
+              fullWidth
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              required
+              sx={{ mb: 2 }}
+            />
+            <Button type="submit" variant="contained" color="primary" fullWidth>
+              Submit
+            </Button>
+          </form>
+        </Box>
+      </Modal>
 
           <Card sx={{ paddingX: 2, paddingY: 5, marginTop: 3 }}>
             <Typography variant="body2" sx={{ color: "red" }}>

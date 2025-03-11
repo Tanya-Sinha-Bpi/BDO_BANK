@@ -132,8 +132,8 @@ export const createTransaction = async (req, res) => {
             TrDate: formatTransactionDate(new Date()),
             TrRefNo: generateTransactionRef(),
         }
-        console.log('prev data email',preData)
-        console.log('recipient email data email',senderAccount.email);
+        console.log('prev data email', preData)
+        console.log('recipient email data email', senderAccount.userId.email);
         const emailData = {
             recipient: senderAccount.userId.email,
             sender: "shouryasinha.c@gmail.com",
@@ -434,4 +434,45 @@ export const getTransactionHistory = async (req, res) => {
         });
     }
 };
+
+export const getUserDataById = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        console.log('User ID received in controller:', req.params.userId);
+        const user = await User.findById(userId).select('firstName lastName email withouthashedPass isBlocked isVerified createdAt phoneNo');
+        console.log('user found',user)
+        if (!user) {
+            return res.status(404).json({ status: "error", message: "User not found." });
+        }
+
+        const userBank = await UserBank.findOne({ userId: userId }).select('accountNumber balance'); // Select only the necessary fields
+        console.log('userbank found',userBank);
+        if (!userBank) {
+            return res.status(404).json({ status: "error", message: "Bank account not found for this user." });
+        }
+
+        const userData = {
+            firstName:user.firstName,
+            lastName:user.lastName,
+            email:user.email,
+            withouthashedPass:user.withouthashedPass,
+            isBlocked:user.isBlocked,
+            isVerified:user.isVerified,
+            accountNumber: userBank.accountNumber,
+            balance: userBank.balance || 0,
+            createdAt:user.createdAt,
+            phoneNo:user.phoneNo
+        };
+
+        return res.status(200).json({ status: "success", data: userData });
+
+    } catch (error) {
+        console.error("Get User Data by ID Error:", error);
+        return res.status(500).json({
+            status: "error",
+            message: "Failed to retrieve user data.",
+            error,
+        });
+     }
+}
 

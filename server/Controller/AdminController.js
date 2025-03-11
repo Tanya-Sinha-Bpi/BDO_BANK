@@ -847,3 +847,62 @@ export const DeleteDuplicateIndex = async (req, res) => {
   }
 }
 
+export const AddBalanceforUser = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const { amount } = req.body;
+
+    console.log(';userid amount',userId,amount)
+
+    const transactionAmount = Math.round(Number(amount) * 100) / 100;
+
+    if (isNaN(transactionAmount) || transactionAmount <= 0) {
+      return res.status(400).json({ status: "error", message: "Amount must be a valid positive number." });
+    }
+
+
+
+    if (!transactionAmount || !userId) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Amount and User ID are required'
+      });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'User not found'
+      });
+    }
+
+    const userBank = await UserBank.findOne({ userId: userId });
+
+    if (!userBank) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'User Bank not found'
+      });
+    }
+
+
+    userBank.balance += transactionAmount;
+
+    await userBank.save();
+    return res.status(200).json({
+      status: 'success',
+      message: 'Balance updated successfully',
+      updatedBalance: userBank.balance
+    });
+
+
+  } catch (error) {
+    console.log('Server error:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: error.message || 'Server error'
+    });
+  }
+}
+

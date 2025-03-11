@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { protect } from "../Controller/AuthController.js";
-import { checkAccountCreeation, createBankAcountByUser, createTransaction, getBankAccountDetails, getTransactionHistory, getUserData } from "../Controller/UserBankController.js";
+import { checkAccountCreeation, createBankAcountByUser, createTransaction, getBankAccountDetails, getTransactionHistory, getUserData, getUserDataById } from "../Controller/UserBankController.js";
+
 
 
 
@@ -14,6 +15,7 @@ router.get('/get-bank-details',protect,getBankAccountDetails);
 router.get('/get-user-data',protect,getUserData);
 router.get('/check-account-creation',protect,checkAccountCreeation);
 router.post('/create-transactions',protect,createTransaction);
+router.get('/get-user-data-ById/:userId',protect,getUserDataById);
 
 
 export default router;
