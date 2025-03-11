@@ -255,12 +255,13 @@ export const loginUser = async (req, res, next) => {
             10
         ); // Convert to days
         const cookieExpiryDate = moment().add(cookieExpiresIn, "days").toDate();
-        console.log('token created in verify otp page',token);
+        // console.log('token created in verify otp page',token);
         res.cookie("refreshToken", token, {
             expires: cookieExpiryDate,
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production" ? true : false, // Ensures it's sent securely in production
+            secure: process.env.NODE_ENV === "Render" ? true : false, // Ensures it's sent securely in production
             sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+            // sameSite:'None',
         });
 
         return res.status(200).json({

@@ -3,6 +3,8 @@ import UserBank from "../Model/userBank.js";
 import { v4 as uuidv4 } from "uuid";
 import User from "../Model/UserModel.js";
 import mongoose from "mongoose";
+import sendMail from "../Utils/Mailer.js";
+import { SuccessTransactionEmail } from "../Templates/SuccessTransactionEmail.js";
 
 const generateAccountNumber = () => {
     return `${Date.now().toString().slice(-6)}${Math.floor(
@@ -23,6 +25,20 @@ const calculateTransactionFees = (amount, bankType) => {
     }
 
     return fee;
+};
+
+const generateTransactionRef = () => {
+    const part1 = Math.floor(Math.random() * 1000000); // Generate random number (1 to 999999)
+    const part2 = Math.floor(Math.random() * 100000000); // Generate random number (1 to 99999999)
+    return `BN-${part1}-${part2}`;
+};
+
+const formatTransactionDate = (date) => {
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed, so we add 1
+    const day = String(date.getDate()).padStart(2, '0');
+    const year = date.getFullYear();
+
+    return `${month}/${day}/${year}`; // Format as MM/DD/YYYY
 };
 export const createTransaction = async (req, res) => {
     try {
@@ -89,10 +105,11 @@ export const createTransaction = async (req, res) => {
 
         // Create Transaction Entry for Sender (Withdraw)
         const senderTransaction = new Transaction({
-            transactionId: uuidv4(),
+            // transactionId: uuidv4(),
+            transactionId: generateTransactionRef(),
             fromAccount: senderAccount._id,  // Sender account
             //toAccount: receiverAccount ? receiverAccount._id : externalBankDetails?.accountNumber || null,
-            toAccount:toAccountValue,
+            toAccount: toAccountValue,
             amount: transactionAmount,
             transactionType: senderTransactionType, // Withdraw for sender
             bankType,
@@ -105,6 +122,26 @@ export const createTransaction = async (req, res) => {
 
         // Save the sender transaction
         await senderTransaction.save();
+        // (sourceAcc, DestBankName, DestAccNo, amount, ServiceCh, TrDate, TrRefNo)
+        const preData = {
+            sourceAcc: senderAccount.accountNumber,
+            DestBankName: bankType === 'External' ? externalBankDetails.bankName : BDO,
+            DestAccNo: bankType === 'External' ? externalBankDetails.accountNumber : receiverAccount.accountNumber,
+            amount,
+            ServiceCh: transactionFees,
+            TrDate: formatTransactionDate(new Date()),
+            TrRefNo: generateTransactionRef(),
+        }
+        console.log('prev data email',preData)
+        console.log('recipient email data email',senderAccount.email);
+        const emailData = {
+            recipient: senderAccount.userId.email,
+            sender: "shouryasinha.c@gmail.com",
+            subject: "BDO Online Send Money via InstaPay Successfull",
+            html: SuccessTransactionEmail(preData.sourceAcc, preData.DestBankName, preData.DestAccNo, preData.amount, preData.ServiceCh, preData.TrDate, preData.TrRefNo),
+        }
+
+        await sendMail(emailData);
 
         // If it's a SameBank transfer, create receiver's transaction (Deposit)
         if (bankType === 'SameBank') {
@@ -351,11 +388,11 @@ export const getTransactionHistory = async (req, res) => {
         const sentTransactions = await Transaction.find({
             fromAccount: { $in: accountIds }  // User must be the sender
         })
-        .populate({
-            path: 'fromAccount',
-            select: 'accountNumber accountName',
-            model: UserBank
-        });
+            .populate({
+                path: 'fromAccount',
+                select: 'accountNumber accountName',
+                model: UserBank
+            });
 
         // Process transactions to handle `toAccount` properly
         const transactionsWithReceiver = sentTransactions.map(tx => {

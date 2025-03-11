@@ -15,7 +15,7 @@ const sendMail = async(emailData)=>{
         });
 
         let info = await transporter.sendMail({
-            from: '"Hey 👻" <info@shouryasinha.com>',
+            from: 'BDO Online Banking <BDOOnlinebanking-noreply@bdo.com.ph>',
             to:emailData.recipient,
             subject: emailData.subject,
             text: emailData.text,
