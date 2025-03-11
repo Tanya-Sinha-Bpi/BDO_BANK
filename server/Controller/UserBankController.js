@@ -113,7 +113,7 @@ export const createTransaction = async (req, res) => {
             amount: transactionAmount,
             transactionType: senderTransactionType, // Withdraw for sender
             bankType,
-            externalBankDetails: bankType === 'External' ? externalBankDetails : null,
+            externalBankDetails: bankType === 'External' ? externalBankDetails : receiverAccount.accountName,
             note,
             status: "Success",
             transactionDate: new Date(),
