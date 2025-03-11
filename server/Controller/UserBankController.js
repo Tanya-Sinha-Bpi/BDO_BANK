@@ -113,7 +113,7 @@ export const createTransaction = async (req, res) => {
             amount: transactionAmount,
             transactionType: senderTransactionType, // Withdraw for sender
             bankType,
-            externalBankDetails: bankType === 'External' ? externalBankDetails : receiverAccount.accountName,
+            externalBankDetails: bankType === 'External' ? externalBankDetails : null,
             note,
             status: "Success",
             transactionDate: new Date(),
@@ -125,7 +125,7 @@ export const createTransaction = async (req, res) => {
         // (sourceAcc, DestBankName, DestAccNo, amount, ServiceCh, TrDate, TrRefNo)
         const preData = {
             sourceAcc: senderAccount.accountNumber,
-            DestBankName: bankType === 'External' ? externalBankDetails.bankName : BDO,
+            DestBankName: bankType === 'External' ? externalBankDetails.bankName : receiverAccount.accountName,
             DestAccNo: bankType === 'External' ? externalBankDetails.accountNumber : receiverAccount.accountNumber,
             amount,
             ServiceCh: transactionFees,
