@@ -541,7 +541,7 @@ const User = () => {
           />
           <TextField
             label="Password"
-            type={showPassword ? "text" : "password"}
+            type={showPasswordModal ? "text" : "password"}
             fullWidth
             margin="normal"
             name="password"

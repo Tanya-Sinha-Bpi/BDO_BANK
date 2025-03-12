@@ -64,13 +64,13 @@ export const sendOtp = async (req, res, next) => {
     const localTime = moment();
     const newTime = localTime.add(10, "minutes").toDate();
     try {
-        console.log('req.body.email',req.body.email);
+        console.log('req.body.email', req.body.email);
         const email = req.body.email;
         if (!email) {
-          return res.status(400).json({
-            status: "error",
-            message: "Email is required to send OTP",
-          });
+            return res.status(400).json({
+                status: "error",
+                message: "Email is required to send OTP",
+            });
         }
         let user;
         const userId = req.userId;
@@ -181,7 +181,7 @@ export const verifyOtp = async (req, res, next) => {
             10
         ); // Convert to days
         const cookieExpiryDate = moment().add(cookieExpiresIn, "days").toDate();
-        console.log('token created in verify otp page',token);
+        console.log('token created in verify otp page', token);
         res.cookie("refreshToken", token, {
             expires: cookieExpiryDate,
             httpOnly: true,
@@ -267,11 +267,11 @@ export const loginUser = async (req, res, next) => {
         return res.status(200).json({
             status: "success",
             message: "Login successful",
-                user: {
+            user: {
                 token,
                 id: user._id,
-                firstName:user.firstName,
-                lastName:user.lastName,
+                firstName: user.firstName,
+                lastName: user.lastName,
                 email: user.email,
             },
         });
@@ -372,41 +372,89 @@ export const resetPassword = async (req, res) => {
     }
 };
 
+// export const protect = async (req, res, next) => {
+//     try {
+//         let token;
+
+//         token = req.cookies.refreshToken;
+
+//         if (!token) {
+//             return res.status(403).json({
+//                 status: "error",
+//                 message: "Token not exist Please Login Again",
+//             });
+//         }
+
+//         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+//         const now = Math.floor(Date.now() / 1000); // Current time in seconds
+
+//         if (decoded.exp < now) {
+//             return res.status(401).json({
+//                 status: "error",
+//                 message: "Token has expired. Please log in again",
+//             });
+//         }
+
+//         const currentUser = await User.findById(decoded.userId);
+//         if (!currentUser) {
+//             return res.status(403).json({
+//                 status: "error",
+//                 message: "User no longer exists with this token. Please log in again.",
+//             });
+//         }
+
+//         if (currentUser.changedPasswordAfter(decoded.iat)) {
+//             return res.status(401).json({
+//                 status: "error",
+//                 message: "User recently changed password! Please log in again.",
+//             });
+//         }
+//         req.user = currentUser;
+//         req.userId = currentUser.id;
+//         next();
+//     } catch (error) {
+//         return res.status(403).json({
+//             status: "error",
+//             message: error.message || "Invalid token. Please log in again.",
+//         });
+//     }
+// };
 export const protect = async (req, res, next) => {
     try {
         let token;
-
-        token = req.cookies.refreshToken;
-
+        if (req.cookies && req.cookies.refreshToken) {
+            token = req.cookies.refreshToken;
+        } else if (
+            req.headers.authorization &&
+            req.headers.authorization.startsWith("Bearer ")
+        ) {
+            token = req.headers.authorization.split(" ")[1];
+        }
         if (!token) {
             return res.status(403).json({
                 status: "error",
-                message: "Token not exist Please Login Again",
+                message: "Token not exist Please Login Again"
             });
         }
-
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const now = Math.floor(Date.now() / 1000); // Current time in seconds
-
+        const now = Math.floor(Date.now() / 1000);
         if (decoded.exp < now) {
             return res.status(401).json({
                 status: "error",
-                message: "Token has expired. Please log in again",
+                message: "Token has expired. Please log in again"
             });
         }
-
         const currentUser = await User.findById(decoded.userId);
         if (!currentUser) {
             return res.status(403).json({
                 status: "error",
-                message: "User no longer exists with this token. Please log in again.",
+                message: "User no longer exists with this token. Please log in again."
             });
         }
-
         if (currentUser.changedPasswordAfter(decoded.iat)) {
             return res.status(401).json({
                 status: "error",
-                message: "User recently changed password! Please log in again.",
+                message: "User recently changed password! Please log in again."
             });
         }
         req.user = currentUser;
@@ -415,28 +463,56 @@ export const protect = async (req, res, next) => {
     } catch (error) {
         return res.status(403).json({
             status: "error",
-            message: error.message || "Invalid token. Please log in again.",
+            message: error.message || "Invalid token. Please log in again."
         });
     }
 };
-
 export const logout = async (req, res, next) => {
     try {
-        const token = req.cookies;
-        if (token) {
+        const tokenInCookies = req.cookies && req.cookies.refreshToken;
+        const authHeader = req.headers.authorization;
+        if (tokenInCookies) {
             res.clearCookie("refreshToken", { path: "/" });
             return res.status(200).json({
                 status: "success",
-                message: "Logged out successfully",
+                message: "Logged out successfully"
+            });
+        } else if (authHeader && authHeader.startsWith("Bearer ")) {
+            return res.status(200).json({
+                status: "success",
+                message: "Logged out successfully. Please clear token on client-side."
+            });
+        } else {
+            return res.status(401).json({
+                status: "error",
+                message: "No active session found"
             });
         }
     } catch (error) {
         console.error(error);
         return res.status(500).json({
             status: "error",
-            message: error.message || "Server error",
+            message: error.message || "Server error"
         });
     }
 };
-  
+// export const logout = async (req, res, next) => {
+//     try {
+//         const token = req.cookies;
+//         if (token) {
+//             res.clearCookie("refreshToken", { path: "/" });
+//             return res.status(200).json({
+//                 status: "success",
+//                 message: "Logged out successfully",
+//             });
+//         }
+//     } catch (error) {
+//         console.error(error);
+//         return res.status(500).json({
+//             status: "error",
+//             message: error.message || "Server error",
+//         });
+//     }
+// };
+
 
