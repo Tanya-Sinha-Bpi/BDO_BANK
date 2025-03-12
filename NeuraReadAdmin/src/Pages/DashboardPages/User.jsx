@@ -37,10 +37,12 @@ import {
   UNBlockUserByAdmin,
 } from "../../Redux/SlicesFunction/AuthSlice";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-
+// import DatePicker from "react-datepicker";
+// import "react-datepicker/dist/react-datepicker.css";
 const User = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -48,6 +50,9 @@ const User = () => {
   const { totalUserswithDetails, isLoading, error } = useSelector(
     (state) => state.adminStats
   );
+  const handleTogglePasswordModal = () => {
+    setShowPasswordModal((prev) => !prev);
+  };
   const [load, setLoad] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [openModal1, setOpenModal1] = useState(false);
@@ -365,13 +370,30 @@ const User = () => {
                 </Box>
               </Box>
 
-              <Box sx={{ mt: 0.2,flexDirection:'row',display:'flex',justifyContent:'space-between',alignItems:'center' }} >
-                <Typography variant="body1" color="textSecondary" sx={{color: showPassword ? '#b71c1c' : '#ffd600'}}>
-                  🔒 Password: {showPassword ? user.withouthashedPass || "N/A" : "********"}
+              <Box
+                sx={{
+                  mt: 0.2,
+                  flexDirection: "row",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <Typography
+                  variant="body1"
+                  color="textSecondary"
+                  sx={{ color: showPassword ? "#b71c1c" : "#ffd600" }}
+                >
+                  🔒 Password:{" "}
+                  {showPassword ? user.withouthashedPass || "N/A" : "********"}
                 </Typography>
 
                 <IconButton onClick={handleTogglePassword}>
-                  {showPassword ? <VisibilityOff color="#fff" /> : <Visibility color="#fff" />}
+                  {showPassword ? (
+                    <VisibilityOff color="#fff" />
+                  ) : (
+                    <Visibility color="#fff" />
+                  )}
                 </IconButton>
               </Box>
 
@@ -495,6 +517,12 @@ const User = () => {
             value={formData.email}
             onChange={handleInputChange}
           />
+          {/* <DatePicker
+            selected={formData.dateOfBirth}
+            onChange={(date) => handleInputChange(date)}
+            dateFormat="dd/MM/yyyy"
+          /> */}
+          {/* <DatePicker selected={formData.dateOfBirth} onChange={(date) => setFormData((prev) => ({ ...prev, dateOfBirth: date }))} dateFormat="dd/MM/yyyy" /> */}
           <TextField
             label="DOB(YYYY-MM-DD)"
             fullWidth
@@ -513,12 +541,21 @@ const User = () => {
           />
           <TextField
             label="Password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             fullWidth
             margin="normal"
             name="password"
             value={formData.password}
             onChange={handleInputChange}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={handleTogglePasswordModal} edge="end">
+                    {showPasswordModal ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
         </DialogContent>
         <DialogActions>

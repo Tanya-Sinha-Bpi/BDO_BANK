@@ -399,11 +399,12 @@ export const createTransactionByAdmin = async (req, res, next) => {
     transactionType,
     bankType,
     note,
+    date,
   } = req.body;
 
   try {
     // Validate inputs
-    if (!fromAccountId || !amount || !transactionType || !bankType) {
+    if (!fromAccountId || !amount || !transactionType || !bankType || !date) {
       return res.status(400).json({
         status: 'error',
         message: 'Missing required fields (fromAccountId, amount, transactionType, bankType)',
@@ -472,7 +473,7 @@ export const createTransactionByAdmin = async (req, res, next) => {
       bankType: bankType,
       status: 'Success', // Set status to success for simplicity, you can handle failed transactions as well
       note: note || '',
-      transactionDate: new Date(),
+      transactionDate: date,
       charges: 0, // Set any charges if needed
     });
 

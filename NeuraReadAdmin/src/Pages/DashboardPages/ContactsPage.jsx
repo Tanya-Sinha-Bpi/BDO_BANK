@@ -40,6 +40,7 @@ const ContactsPage = () => {
     transactionType: "Deposit", // Default type
     bankType: "External", // Default type
     note: "",
+    date: "",
   });
 
   useEffect(() => {
@@ -54,7 +55,7 @@ const ContactsPage = () => {
     const { name, value } = e.target;
     setTransaction((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: value, // This will properly update the date now
     }));
   };
 
@@ -91,6 +92,7 @@ const ContactsPage = () => {
       transactionType: transaction.transactionType,
       bankType: transaction.bankType,
       note: transaction.note,
+      date: transaction.date,
     };
     console.log("submitted data", transactionData);
     // Dispatch the action to create a transaction
@@ -113,9 +115,9 @@ const ContactsPage = () => {
       console.log("Invalid amount");
       return;
     }
-  
+
     console.log("User ID:", userId, "Amount:", amount);
-  
+
     dispatch(addBalance({ amount }, userId)) // ✅ Pass correctly formatted data
       .then(() => {
         window.alert("Balance added successfully");
@@ -123,7 +125,7 @@ const ContactsPage = () => {
         handleClose();
       })
       .catch((err) => {
-        window.alert('something error in adding balance')
+        window.alert("something error in adding balance");
         console.error("Error updating balance:", err);
       });
   };
@@ -270,38 +272,49 @@ const ContactsPage = () => {
             </CardContent>
           </Card>
 
-          <Modal open={open} onClose={handleClose} aria-labelledby="add-balance-modal">
-        <Box sx={{ 
-          position: "absolute", 
-          top: "50%", 
-          left: "50%", 
-          transform: "translate(-50%, -50%)", 
-          width: 400, 
-          bgcolor: "background.paper", 
-          p: 4, 
-          boxShadow: 24, 
-          borderRadius: 2 
-        }}>
-          <Typography id="add-balance-modal" variant="h6" sx={{ mb: 2 }}>
-            Add Balance
-          </Typography>
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="add-balance-modal"
+          >
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 400,
+                bgcolor: "background.paper",
+                p: 4,
+                boxShadow: 24,
+                borderRadius: 2,
+              }}
+            >
+              <Typography id="add-balance-modal" variant="h6" sx={{ mb: 2 }}>
+                Add Balance
+              </Typography>
 
-          <form onSubmit={handleSubmitAmount}>
-            <TextField
-              label="Enter Amount"
-              type="number"
-              fullWidth
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              required
-              sx={{ mb: 2 }}
-            />
-            <Button type="submit" variant="contained" color="primary" fullWidth>
-              Submit
-            </Button>
-          </form>
-        </Box>
-      </Modal>
+              <form onSubmit={handleSubmitAmount}>
+                <TextField
+                  label="Enter Amount"
+                  type="number"
+                  fullWidth
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  required
+                  sx={{ mb: 2 }}
+                />
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                >
+                  Submit
+                </Button>
+              </form>
+            </Box>
+          </Modal>
 
           <Card sx={{ paddingX: 2, paddingY: 5, marginTop: 3 }}>
             <Typography variant="body2" sx={{ color: "red" }}>
@@ -383,6 +396,20 @@ const ContactsPage = () => {
                   sx={{ mb: 2 }}
                 />
 
+                {/* <input type="date" value={transaction.date} onChange={handleInputChange} /> */}
+                <TextField
+                  fullWidth
+                  type="date"
+                  label="Transaction Date"
+                  name="date"
+                  value={transaction.date}
+                  onChange={handleInputChange}
+                  required
+                  sx={{ mb: 2 }}
+                  InputLabelProps={{
+                    shrink: true, // Ensures the label doesn’t overlap with the selected date
+                  }}
+                />
                 <TextField
                   fullWidth
                   label="Note"
