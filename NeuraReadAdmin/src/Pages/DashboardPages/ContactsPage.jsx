@@ -19,6 +19,7 @@ import {
   addBalance,
   createTransactionByAdminSlice,
   fetchTotalContactsByUser,
+  updateUserData,
 } from "../../Redux/SlicesFunction/DataSlice";
 
 const ContactsPage = () => {
@@ -28,10 +29,14 @@ const ContactsPage = () => {
     (state) => state.adminStats
   );
   const [open, setOpen] = useState(false);
+  const [openUpdateUser, setOpenUpdateUser] = useState(false);
   const [amount, setAmount] = useState("");
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const handleOpenUpdateUser = () => setOpenUpdateUser(true);
+  const handleCloseUpdateUser = () => setOpenUpdateUser(false);
 
   const [transaction, setTransaction] = useState({
     fromAccount: "",
@@ -42,6 +47,32 @@ const ContactsPage = () => {
     note: "",
     date: "",
   });
+
+  const [updateUser, setUpdateUser] = useState({
+    userId: userId,
+    firstName: contactsByUser?.firstName || "",
+    lastName: contactsByUser?.lastName || "",
+    email: contactsByUser?.email || "",
+    phoneNo: contactsByUser?.phoneNo || "",
+    dateOfBirth: contactsByUser?.dateOfBirth || "",
+  });
+
+  const handleInputChangeForUser = (e) => {
+    const { name, value } = e.target;
+    setUpdateUser((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmitUserUpdateData=()=>{
+    try {
+      dispatch(updateUserData(updateUser,userId));
+      handleCloseUpdateUser(false);
+    } catch (error) {
+      console.error('error in update user',error);
+    }
+  }
 
   useEffect(() => {
     if (userId) {
@@ -258,7 +289,14 @@ const ContactsPage = () => {
                 )}
               </Typography>
 
-              <Box sx={{ paddingY: 5 }}>
+              <Box
+                sx={{
+                  paddingY: 5,
+                  gap: 5,
+                  flexDirection: "row",
+                  display: "flex",
+                }}
+              >
                 <Button
                   variant="contained"
                   color="primary"
@@ -268,10 +306,104 @@ const ContactsPage = () => {
                 >
                   Add Balance for this User
                 </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                  sx={{ fontSize: 13 }}
+                  onClick={handleOpenUpdateUser} // Pass event
+                >
+                  Edit User Info
+                </Button>
               </Box>
             </CardContent>
           </Card>
 
+          
+          {/* Update user mOdal */}
+          <Modal
+            open={openUpdateUser}
+            onClose={handleCloseUpdateUser}
+            aria-labelledby="add-balance-modal"
+          >
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 400,
+                bgcolor: "background.paper",
+                p: 4,
+                boxShadow: 24,
+                borderRadius: 2,
+              }}
+            >
+              <Typography id="add-balance-modal" variant="h6" sx={{ mb: 2 }}>
+                Update User Info
+              </Typography>
+
+              <form onSubmit={handleSubmitUserUpdateData}>
+               <Box sx={{display:'flex',flexDirection:'row',gap:2}}>
+               <TextField
+                  label="First Name"
+                  type="text"
+                  fullWidth
+                  name="firstName"
+                  value={updateUser.firstName}
+                  onChange={(e)=>handleInputChangeForUser(e)}
+                  sx={{ mb: 2 }}
+                />
+                 <TextField
+                  label="Last Name"
+                  type="text"
+                  fullWidth
+                  name="lastName"
+                  value={updateUser.lastName}
+                  onChange={(e)=>handleInputChangeForUser(e)}
+                  sx={{ mb: 2 }}
+                />
+               </Box>
+               <TextField
+                  label="Email"
+                  type="text"
+                  fullWidth
+                  name="email"
+                  value={updateUser.email}
+                  onChange={(e)=>handleInputChangeForUser(e)}
+                  sx={{ mb: 2 }}
+                />
+                <TextField
+                  label="Phone Number"
+                  type="tel"
+                  fullWidth
+                  name="phoneNo"
+                  value={updateUser.phoneNo}
+                  onChange={(e)=>handleInputChangeForUser(e)}
+                  sx={{ mb: 2 }}
+                />
+                 <TextField
+                  label="Date of Birth"
+                  type="date"
+                  fullWidth
+                  name="dateOfBirth"
+                  value={updateUser.dateOfBirth}
+                  onChange={(e)=>handleInputChangeForUser(e)}
+                  sx={{ mb: 2 }}
+                />
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                >
+                  Submit
+                </Button>
+              </form>
+            </Box>
+          </Modal>
+
+          {/* Amount Modal */}
           <Modal
             open={open}
             onClose={handleClose}
@@ -315,6 +447,7 @@ const ContactsPage = () => {
               </form>
             </Box>
           </Modal>
+
 
           <Card sx={{ paddingX: 2, paddingY: 5, marginTop: 3 }}>
             <Typography variant="body2" sx={{ color: "red" }}>

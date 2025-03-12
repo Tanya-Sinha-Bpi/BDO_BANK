@@ -1,5 +1,5 @@
 export const SuccessTransactionEmail = (sourceAcc, DestBankName, DestAccNo, amount, ServiceCh, TrDate, TrRefNo) => {
-    return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html
   dir="ltr"
   xmlns="http://www.w3.org/1999/xhtml"
@@ -502,8 +502,8 @@ export const SuccessTransactionEmail = (sourceAcc, DestBankName, DestAccNo, amou
                                     >
                                       Your Send Money to another local bank was
                                       successfully processed with Reference
-                                      Number ${TrRefNo}. The amount will
-                                      be credited real-time to the destination
+                                      Number ${TrRefNo}. The amount will be
+                                      credited real-time to the destination
                                       account. Please see your transaction
                                       details below:
                                     </p>
@@ -539,8 +539,8 @@ export const SuccessTransactionEmail = (sourceAcc, DestBankName, DestAccNo, amou
                                         color: #333333;
                                       "
                                     >
-                                      Destination Bank: ${DestBankName}, /GCash via
-                                      InstaPay
+                                      Destination Bank: ${DestBankName}, /GCash
+                                      via InstaPay
                                     </h6>
                                     <h6
                                       class="es-text-mobile-size-12 es-override-size"
@@ -624,8 +624,7 @@ export const SuccessTransactionEmail = (sourceAcc, DestBankName, DestAccNo, amou
                                         margin-bottom: 11px;
                                       "
                                     >
-                                      Transaction Ref. No.:
-                                      ${TrRefNo}
+                                      Transaction Ref. No.: ${TrRefNo}
                                     </p>
                                     <p
                                       class="es-text-mobile-size-12 es-override-size"
@@ -662,8 +661,125 @@ export const SuccessTransactionEmail = (sourceAcc, DestBankName, DestAccNo, amou
                                         margin-bottom: 11px;
                                       "
                                     >
-                                      Thank you for choosing My Project for your
-                                      banking needs.
+                                      Thank you for choosing BDO!
+                                    </p>
+                                    <table
+                                      role="presentation"
+                                      width="100%"
+                                      cellspacing="0"
+                                      cellpadding="0"
+                                      border="0"
+                                    >
+                                      <tr>
+                                        <td
+                                          style="
+                                            border-top: 1px solid #ccc;
+                                            height: 15px;
+                                            line-height: 15px;
+                                          "
+                                        ></td>
+                                      </tr>
+                                    </table>
+                                    <p
+                                      class="es-text-mobile-size-12 es-override-size"
+                                      style="
+                                        margin: 0;
+                                        mso-line-height-rule: exactly;
+                                        font-family: 'PT Sans', Arial,
+                                          sans-serif;
+                                        line-height: 21px;
+                                        letter-spacing: 0;
+                                        color: #36241c;
+                                        font-size: 14px;
+                                        margin-bottom: 11px;
+                                      "
+                                    >
+                                      Be smarter than a scammer with
+                                      #BDOStopScam -Do not share your
+                                      username,password,OTP, and card details
+                                      (card number, expiry date, and CVV). -Do
+                                      not click links.BDO will NEVER send links
+                                      via email,SMS, and Viber. -Do not reply to
+                                      suspicious senders. Visit the BDO website
+                                      and search ro "BDOStopScam" to view all
+                                      official BDO sender names.
+                                    </p>
+                                    <table
+                                      role="presentation"
+                                      width="100%"
+                                      cellspacing="0"
+                                      cellpadding="0"
+                                      border="0"
+                                    >
+                                      <tr>
+                                        <td
+                                          style="
+                                            border-top: 1px solid #ccc;
+                                            height: 15px;
+                                            line-height: 15px;
+                                          "
+                                        ></td>
+                                      </tr>
+                                    </table>
+                                    <p
+                                      class="es-text-mobile-size-12 es-override-size"
+                                      style="
+                                        margin: 0;
+                                        mso-line-height-rule: exactly;
+                                        font-family: 'PT Sans', Arial,
+                                          sans-serif;
+                                        line-height: 21px;
+                                        letter-spacing: 0;
+                                        color: #36241c;
+                                        font-size: 14px;
+                                        margin-bottom: 11px;
+                                      "
+                                    >
+                                      Please so not reply to this email as it
+                                      not authorized to accept messages. If you
+                                      have any questions,contact us through the
+                                      following: Metro Manila: (+632) 8888-0000
+                                      International Toll-Free Numbers: IAC
+                                      +800-8- CALLBDO (2255-236)
+                                    </p>
+                                    <table
+                                      role="presentation"
+                                      width="100%"
+                                      cellspacing="0"
+                                      cellpadding="0"
+                                      border="0"
+                                    >
+                                      <tr>
+                                        <td
+                                          style="
+                                            border-top: 1px solid #ccc;
+                                            height: 15px;
+                                            line-height: 15px;
+                                          "
+                                        ></td>
+                                      </tr>
+                                    </table>
+                                    <p
+                                      class="es-text-mobile-size-12 es-override-size"
+                                      style="
+                                        margin: 0;
+                                        mso-line-height-rule: exactly;
+                                        font-family: 'PT Sans', Arial,
+                                          sans-serif;
+                                        line-height: 21px;
+                                        letter-spacing: 0;
+                                        color: #36241c;
+                                        font-size: 14px;
+                                        margin-bottom: 11px;
+                                      "
+                                    >
+                                      Deposits are insured by PDIC up to P500,00
+                                      per depositor. BDO Unibank,Inc. is
+                                      regulated by the Bangko Sentral ng
+                                      Philipians:https://www.bsp.gov.ph The
+                                      BDO,BDO Unibank, and other BDO-related
+                                      trademarks are owned by BDO Unibank,Inc.
+                                      and All rights reserved.
                                     </p>
                                   </td>
                                 </tr>
@@ -698,6 +814,7 @@ export const SuccessTransactionEmail = (sourceAcc, DestBankName, DestAccNo, amou
     </div>
   </body>
 </html>
+
 
 
     `;

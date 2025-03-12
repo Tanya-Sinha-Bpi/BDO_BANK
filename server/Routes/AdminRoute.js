@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { AddBalanceforUser, AdminResetPassword, blockUser, createBankAccount, createTransactionByAdmin, createUserByAdmin, DeleteDuplicateIndex, deleteTransactionHistoryById, deleteUserById, getAdminData, getAllUser, getDashboardStats, GetDuplicateIndex, getSingleUser, getTransactionHistoryOFAdminByUser, isAdmin, loginAdmin, unBlockUser } from "../Controller/AdminController.js";
+import { AddBalanceforUser, AdminResetPassword, blockUser, createBankAccount, createTransactionByAdmin, createUserByAdmin, DeleteDuplicateIndex, deleteTransactionHistoryById, deleteUserById, EditUserByAdmin, getAdminData, getAllUser, getDashboardStats, GetDuplicateIndex, getSingleUser, getTransactionHistoryOFAdminByUser, isAdmin, loginAdmin, unBlockUser } from "../Controller/AdminController.js";
 import { protect } from "../Controller/AuthController.js";
 
 
@@ -25,5 +25,7 @@ router.get('/get-duplicate-db-index',protect,isAdmin,GetDuplicateIndex);
 router.delete('/delete-dublicate-db-index',protect,isAdmin,DeleteDuplicateIndex);
 
 router.post('/add-user-balance/:userId',protect,isAdmin,AddBalanceforUser);
+
+router.put('/edit-user-by-admin/:userId',protect,isAdmin,EditUserByAdmin);
 
 export default router;

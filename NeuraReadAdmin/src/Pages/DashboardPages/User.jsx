@@ -425,14 +425,25 @@ const User = () => {
         open={Boolean(anchorEl)}
         onClose={handleMenuClose}
       >
-        <MenuItem
+        {/* <MenuItem
           onClick={() => {
             navigate(`/contacts/${selectedUser._id}`);
             handleMenuClose();
           }}
+          disabled={selectedUser?.isBankAccountCreated}
         >
-          Create Transactions
-        </MenuItem>
+          Create Transactions 
+        </MenuItem> */}
+        {selectedUser?.isBankAccountCreated && (
+          <MenuItem
+            onClick={() => {
+              navigate(`/contacts/${selectedUser._id}`);
+              handleMenuClose();
+            }}
+          >
+            Create Transactions
+          </MenuItem>
+        )}
         <MenuItem
           onClick={() => {
             handleDeleteUser(selectedUser._id);
@@ -447,6 +458,7 @@ const User = () => {
             handleModalOpen1();
             handleMenuClose();
           }}
+          disabled={selectedUser?.isBankAccountCreated}
         >
           Create Bank Account of this User
         </MenuItem>

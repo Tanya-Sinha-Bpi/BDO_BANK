@@ -10,7 +10,7 @@ const initialState = {
   adminStas: {},
   allTransactionHIstory: [],
   adminProfile: {},
-  contactsByUser:{},
+  contactsByUser: {},
 };
 
 const dataSlice = createSlice({
@@ -46,9 +46,9 @@ const dataSlice = createSlice({
       state.error = false;
       state.isLoading = false;
     },
-    updateGetuserInfo:(state,action)=>{
+    updateGetuserInfo: (state, action) => {
       state.contactsByUser = action.payload;
-    }
+    },
   },
 });
 
@@ -62,7 +62,7 @@ export const {
   updateTransactionHistory,
   getAdminProfile,
   resetDataState,
-  updateGetuserInfo
+  updateGetuserInfo,
 } = dataSlice.actions;
 
 export function fetchTotalUsersList() {
@@ -321,7 +321,7 @@ export function GetAdminProfileData() {
 
 export function fetchTotalContactsByUser(id) {
   return async (dispatch) => {
-    console.log('userId in slice fucntion',id);
+    console.log("userId in slice fucntion", id);
     dispatch(updateDataIsLoading({ isLoading: true, error: false }));
     try {
       if (!id) {
@@ -334,7 +334,7 @@ export function fetchTotalContactsByUser(id) {
 
       dispatch(updateDataIsLoading({ isLoading: false, error: false }));
       dispatch(updateGetuserInfo(response.data.data));
-      console.log('response single user data in slice',response.data.data);
+      console.log("response single user data in slice", response.data.data);
       return response.data;
     } catch (error) {
       dispatch(updateDataIsLoading({ isLoading: false, error: true }));
@@ -347,9 +347,39 @@ export function fetchTotalContactsByUser(id) {
   };
 }
 
-export function addBalance(formData,userId) {
+export function updateUserData(formData, userId) {
   return async (dispatch) => {
-    console.log('userId in slice fucntion',userId);
+    console.log("userId in slice fucntion", userId);
+    dispatch(updateDataIsLoading({ isLoading: true, error: false }));
+    try {
+      if (!userId) {
+        throw new Error("User ID is undefined");
+      }
+      const response = await axiosInstances.put(
+        `admin/data/edit-user-by-admin/${userId}`,
+        formData
+      );
+      dispatch(updateDataIsLoading({ isLoading: false, error: false }));
+      const message =
+        response.data?.message ||
+        response.data?.msg ||
+        "Data Fetched successful!";
+      const severity = response.data?.status || "success";
+      dispatch(showSnackbar({ message, severity }));
+    } catch (error) {
+      dispatch(updateDataIsLoading({ isLoading: false, error: true }));
+      const severity = error.response?.status || "error";
+      const message =
+        error.response?.data?.message || error.message || "Something Wrong";
+      dispatch(showSnackbar({ message, severity }));
+      return Promise.reject({ severity, message });
+    }
+  };
+}
+
+export function addBalance(formData, userId) {
+  return async (dispatch) => {
+    console.log("userId in slice fucntion", userId);
     dispatch(updateDataIsLoading({ isLoading: true, error: false }));
     try {
       if (!userId) {
@@ -357,12 +387,13 @@ export function addBalance(formData,userId) {
       }
 
       const response = await axiosInstances.post(
-        `admin/data/add-user-balance/${userId}`,{ amount: formData.amount },
+        `admin/data/add-user-balance/${userId}`,
+        { amount: formData.amount }
       );
 
       dispatch(updateDataIsLoading({ isLoading: false, error: false }));
       // dispatch(updateGetuserInfo(response.data.data));
-      console.log('response single user data in slice',response.data.data);
+      console.log("response single user data in slice", response.data.data);
       return response.data;
     } catch (error) {
       dispatch(updateDataIsLoading({ isLoading: false, error: true }));
@@ -374,4 +405,3 @@ export function addBalance(formData,userId) {
     }
   };
 }
-

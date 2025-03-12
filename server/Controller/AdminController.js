@@ -392,7 +392,7 @@ export const loginAdmin = async (req, res, next) => {
 };
 
 export const createTransactionByAdmin = async (req, res, next) => {
-  console.log('recieved date',req.body.date);
+  console.log('recieved date', req.body.date);
   const {
     fromAccountId,
     toAccountDetails, // External bank details if external transfer
@@ -477,7 +477,7 @@ export const createTransactionByAdmin = async (req, res, next) => {
       transactionDate: new Date(date),
       charges: 0, // Set any charges if needed
     });
-  console.log('saved date',new Date(date));
+    console.log('saved date', new Date(date));
     // Save the transaction in the database
     await transaction.save();
 
@@ -854,7 +854,7 @@ export const AddBalanceforUser = async (req, res) => {
     const userId = req.params.userId;
     const { amount } = req.body;
 
-    console.log(';userid amount',userId,amount)
+    console.log(';userid amount', userId, amount)
 
     const transactionAmount = Math.round(Number(amount) * 100) / 100;
 
@@ -899,6 +899,62 @@ export const AddBalanceforUser = async (req, res) => {
     });
 
 
+  } catch (error) {
+    console.log('Server error:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: error.message || 'Server error'
+    });
+  }
+}
+
+export const EditUserByAdmin = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const { firstName, lastName, email, phoneNo, dateOfBirth } = req.body;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'User not found'
+      });
+    }
+    if (firstName) {
+      user.firstName = firstName;
+    }
+    if (lastName) {
+      user.lastName = lastName;
+    }
+    if (email) {
+      const existingUser = await User.findOne({ email: email.toLowerCase() });
+      if (existingUser && existingUser._id.toString() !== user._id.toString()) {
+        return res.status(400).json({
+          status: 'error',
+          message: 'Email already exists'
+        });
+      }
+      user.email = email.toLowerCase(); // Store email in lowercase
+    }
+    if (phoneNo) {
+      const existingPhone = await User.findOne({ phoneNo });
+      if (existingPhone && existingPhone._id.toString() !== user._id.toString()) {
+        return res.status(400).json({
+          status: 'error',
+          message: 'Phone number already exists'
+        });
+      }
+      user.phoneNo = phoneNo;
+    }
+    if (dateOfBirth) {
+      user.dateOfBirth = dateOfBirth;
+    }
+    await user.save();
+    return res.status(200).json({
+      status: 'success',
+      message: 'User updated successfully',
+      updatedUser: user
+    });
   } catch (error) {
     console.log('Server error:', error);
     return res.status(500).json({
