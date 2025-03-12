@@ -523,13 +523,26 @@ const User = () => {
             dateFormat="dd/MM/yyyy"
           /> */}
           {/* <DatePicker selected={formData.dateOfBirth} onChange={(date) => setFormData((prev) => ({ ...prev, dateOfBirth: date }))} dateFormat="dd/MM/yyyy" /> */}
-          <TextField
+          {/* <TextField
             label="DOB(YYYY-MM-DD)"
             fullWidth
             margin="normal"
             name="dateOfBirth"
             value={formData.dateOfBirth}
             onChange={handleInputChange}
+          /> */}
+          <TextField
+            fullWidth
+            type="date"
+            label="DOB"
+            name="dateOfBirth"
+            value={formData.dateOfBirth}
+            onChange={handleInputChange}
+            required
+            sx={{ mb: 2 }}
+            InputLabelProps={{
+              shrink: true, // Ensures the label doesn’t overlap with the selected date
+            }}
           />
           <TextField
             label="Phone No"

@@ -55,7 +55,7 @@ const transactionSchema = new mongoose.Schema({
     },
     transactionDate: {
         type: Date,
-        default: Date.now
+        default: new Date(),
     },
     charges: {
         type: Number,

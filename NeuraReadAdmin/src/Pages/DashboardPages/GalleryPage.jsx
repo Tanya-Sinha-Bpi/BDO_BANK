@@ -60,7 +60,7 @@ const GalleryPage = () => {
             Status: {transaction.status}
           </Typography>
           <Typography variant="body2" color="textPrimary">
-            Date: {new Date(transaction.createdAt).toLocaleString()}
+            Date: {new Date(transaction.transactionDate).toLocaleString()}
           </Typography>
 
           {isSameBank ? (

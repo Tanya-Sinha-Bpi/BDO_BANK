@@ -319,17 +319,17 @@ export function GetAdminProfileData() {
   };
 }
 
-export function fetchTotalContactsByUser(userId) {
+export function fetchTotalContactsByUser(id) {
   return async (dispatch) => {
-    console.log('userId in slice fucntion',userId);
+    console.log('userId in slice fucntion',id);
     dispatch(updateDataIsLoading({ isLoading: true, error: false }));
     try {
-      if (!userId) {
+      if (!id) {
         throw new Error("User ID is undefined");
       }
 
       const response = await axiosInstances.get(
-        `user/data/get-user-data-ById/${userId}`
+        `admin/data/get-single-user/${id}`
       );
 
       dispatch(updateDataIsLoading({ isLoading: false, error: false }));

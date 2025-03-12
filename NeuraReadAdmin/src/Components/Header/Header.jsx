@@ -17,7 +17,7 @@ import logo from "../../assets/ic_launcher.png";
 import { Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { LogoutUser } from "../../Redux/SlicesFunction/AuthSlice";
+import { logout, LogoutUser } from "../../Redux/SlicesFunction/AuthSlice";
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: "flex",
@@ -43,8 +43,17 @@ const Header = () => {
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
-  const handleLogout = () => {
-    dispatch(LogoutUser());
+  const handleLogout = async() => {
+    try{
+     const response = await dispatch(LogoutUser());
+     console.log('response',response)
+    }catch(err){
+      console.log('Error in logging out',err)
+      if(err.message=== 'No active session found'){
+        dispatch(logout());
+      }
+    }
+    
   };
   return (
     <>

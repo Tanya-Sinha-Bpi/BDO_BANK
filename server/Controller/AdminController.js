@@ -104,7 +104,7 @@ export const isAdmin = async (req, res, next) => {
 export const getSingleUser = async (req, res, next) => {
   try {
     const id = req.params.id;
-    const user = await User.findById(id).select('firstName lastName email isVerified isBlocked withouthashedPass address phoneNo isBankAccountCreated');
+    const user = await User.findById(id).select('firstName lastName email isVerified isBlocked withouthashedPass address phoneNo isBankAccountCreated createdAt');
 
     if (!user) {
       return res.status(404).json({
@@ -392,6 +392,7 @@ export const loginAdmin = async (req, res, next) => {
 };
 
 export const createTransactionByAdmin = async (req, res, next) => {
+  console.log('recieved date',req.body.date);
   const {
     fromAccountId,
     toAccountDetails, // External bank details if external transfer
@@ -473,10 +474,10 @@ export const createTransactionByAdmin = async (req, res, next) => {
       bankType: bankType,
       status: 'Success', // Set status to success for simplicity, you can handle failed transactions as well
       note: note || '',
-      transactionDate: date,
+      transactionDate: new Date(date),
       charges: 0, // Set any charges if needed
     });
-
+  console.log('saved date',new Date(date));
     // Save the transaction in the database
     await transaction.save();
 
