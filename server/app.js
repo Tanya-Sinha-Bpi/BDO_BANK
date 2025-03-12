@@ -49,7 +49,8 @@ const limiter = rateLimit({
           "https://bpi-bank-system.onrender.com",
           "http://localhost:7878",
           "https://bpi-bank.onrender.com",
-          "https://bdo-bank.onrender.com"
+          "https://bdo-bank.onrender.com",
+          "https://frontend-ljs5x2y6b-amans-projects-74f8e6dc.vercel.app",
         ],
       },
     })
@@ -60,6 +61,7 @@ const limiter = rateLimit({
     "http://localhost:7272",
     "http://localhost:5173",
     "http://10.0.2.2:7272",
+    "https://frontend-ljs5x2y6b-amans-projects-74f8e6dc.vercel.app",
   ];
 
   app.use(
