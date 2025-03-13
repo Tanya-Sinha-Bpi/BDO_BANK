@@ -284,7 +284,7 @@ export const getBankAccountDetails = async (req, res) => {
                 message: "User is blocked."
             })
         }
-        const userBank = await UserBank.findOne({ userId }).populate("userId", "firstName lastName");
+        const userBank = await UserBank.findOne({ userId }).populate("userId", "firstName lastName email phoneNo dateOfBirth isVerified createdAt");
         if (!userBank) {
             return res.status(404).json({
                 status: "error",
@@ -297,6 +297,11 @@ export const getBankAccountDetails = async (req, res) => {
             bankDetails: {
                 firstName: userBank.userId.firstName,
                 lastName: userBank.userId.lastName,
+                email: userBank.userId.email,
+                phoneNo: userBank.userId.phoneNo,
+                dateOfBirth: userBank.userId.dateOfBirth,
+                isVerified: userBank.userId.isVerified,
+                userCreatedAt: userBank.userId.createdAt,
                 accountName: userBank.accountName,
                 branchName: userBank.branchName,
                 accountNumber: userBank.accountNumber,
