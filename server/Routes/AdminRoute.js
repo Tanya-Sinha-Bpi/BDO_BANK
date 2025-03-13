@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { AddBalanceforUser, AdminResetPassword, blockUser, closeAccount, createBankAccount, CreateBillerData, CreateTelecomData, createTransactionByAdmin, createUserByAdmin, DeleteBillerData, DeleteDuplicateIndex, DeleteTelecomData, deleteTransactionHistoryById, deleteUserById, EditUserByAdmin, getAdminData, GetAllBillers, GetAllTelecom, getAllUser, getDashboardStats, GetDuplicateIndex, getSingleUser, getTransactionHistoryOFAdminByUser, isAdmin, loginAdmin, reopenAccount, unBlockUser, UpdateBillerData, UpdateTelecomData } from "../Controller/AdminController.js";
+import { AddBalanceforUser, AdminResetPassword, blockUser, closeAccount, createBankAccount, CreateBillerData, CreateTelecomData, createTransactionByAdmin, createUserByAdmin, DeleteBillerData, DeleteDuplicateIndex, DeleteTelecomData, deleteTransactionHistoryById, deleteUserById, EditUserByAdmin, getAdminData, GetAllBillers, GetAllTelecom, getAllUser, getDashboardStats, GetDuplicateIndex, getSingleUser, getTransactionHistoryOFAdminByUser, isAdmin, loginAdmin, reopenAccount, sendEmailsToMultipleUsers, unBlockUser, UpdateBillerData, UpdateTelecomData } from "../Controller/AdminController.js";
 import { protect } from "../Controller/AuthController.js";
 
 
@@ -42,5 +42,6 @@ router.get('/get-telecom', protect, GetAllTelecom);
 
 router.post('/account-close/:userId', protect, isAdmin, closeAccount);
 router.post('/account-reopen/:userId', protect, reopenAccount);
+router.post('/send-bulk-email',protect,isAdmin,sendEmailsToMultipleUsers);
 
 export default router;

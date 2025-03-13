@@ -147,6 +147,14 @@ const Header = () => {
                 >
                   Add Telecom Providers
                 </Button>
+                <Button
+                  variant="text"
+                  color="info"
+                  size="small"
+                  onClick={() => navigate("/send-bulk-email")}
+                >
+                  Send Bulk Email
+                </Button>
               </Box>
             </Box>
             <Box

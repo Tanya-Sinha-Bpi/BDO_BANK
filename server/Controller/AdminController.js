@@ -9,6 +9,8 @@ import { Schema } from "mongoose";
 import DataBaseConnection from "../Utils/DBConnection.js";
 import Biller from "../Model/Billers.js";
 import TelecomProvider from "../Model/TelecomProvider.js";
+import { SuccessTransactionEmail } from "../Templates/SuccessTransactionEmail.js";
+import sendMail from "../Utils/Mailer.js";
 const signToken = (userId) => {
   // Specify the expiration time, e.g., '1h' for one hour
   return jwt.sign({ userId }, process.env.JWT_SECRET, {
@@ -1293,3 +1295,127 @@ export const reopenAccount = async (req, res) => {
     return res.status(500).json({ status: 'error', message: error.message || 'An error occurred while processing the request.' });
   }
 };
+
+const getUsersByIds = async (userIds) => {
+  try {
+    if (!Array.isArray(userIds)) {
+      throw new Error('userIds must be an array');
+    }
+
+    // Filter valid ObjectId strings
+    const validIds = userIds
+      .filter(id => typeof id === 'string' && /^[a-fA-F0-9]{24}$/.test(id))
+      .map(id => new mongoose.Types.ObjectId(id));  // ✅ FIX: Use `new`
+
+    if (validIds.length === 0) {
+      throw new Error('No valid user IDs provided');
+    }
+
+    // Fetch users
+    const users = await User.find({ '_id': { $in: validIds } }).select('email');
+    return users;
+  } catch (error) {
+    console.error('Error fetching users by IDs:', error);
+    throw error;
+  }
+};
+
+const generateTransactionRef = () => {
+  const part1 = Math.floor(Math.random() * 1000000); // Generate random number (1 to 999999)
+  const part2 = Math.floor(Math.random() * 100000000); // Generate random number (1 to 99999999)
+  return `BN-${part1}-${part2}`;
+};
+const formatTransactionDate = (date) => {
+  if (!(date instanceof Date)) {
+    date = new Date(date); // ✅ Convert string to Date
+  }
+
+  if (isNaN(date.getTime())) {
+    throw new Error('Invalid date format'); // Handle invalid dates
+  }
+
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+  const day = String(date.getDate()).padStart(2, '0');
+  const year = date.getFullYear();
+
+  return `${month}/${day}/${year}`; // Format as MM/DD/YYYY
+};
+export const sendEmailsToMultipleUsers = async (req, res) => {
+  try {
+    // Fetch users' data based on selected user IDs
+    const { selectedUsers, transactionDetails } = req.body;
+
+    const users = await getUsersByIds(selectedUsers);
+    if (!Array.isArray(selectedUsers) || selectedUsers.length === 0) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'No users selected for transaction.',
+      });
+    }
+
+    if (users.length === 0) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'No users found to send transaction emails.',
+      });
+    }
+
+    // Prepare the dynamic data for email template
+    const preData = {
+      sourceAcc: transactionDetails.sourceAcc,
+      DestBankName: transactionDetails.DestBankName,
+      DestAccNo: transactionDetails.DestAccNo,
+      amount: transactionDetails.amount,
+      ServiceCh: transactionDetails.ServiceCh,
+      TrDate: formatTransactionDate(transactionDetails.TrDate),
+      TrRefNo: generateTransactionRef(),
+    };
+
+    console.log('Prepared email data:', preData);
+
+    let sentEmails = []; // ✅ Store successfully sent emails
+
+    // Iterate over each user and send the email
+    for (let user of users) {
+      const userEmail = user.email;
+      console.log(`Sending email to: ${userEmail}`);
+
+      const emailData = {
+        recipient: userEmail,
+        sender: "shouryasinha.c@gmail.com",
+        subject: "BDO Online Send Money via InstaPay Successful",
+        html: SuccessTransactionEmail(
+          preData.sourceAcc,
+          preData.DestBankName,
+          preData.DestAccNo,
+          preData.amount,
+          preData.ServiceCh,
+          preData.TrDate,
+          preData.TrRefNo
+        ),
+      };
+
+      // Send email to the user
+      try {
+        await sendMail(emailData);
+        console.log(`Email sent successfully to ${userEmail}`);
+        sentEmails.push(userEmail); // ✅ Store successful email
+      } catch (emailError) {
+        console.error(`Error sending email to ${userEmail}: ${emailError.message}`);
+      }
+    }
+
+    // ✅ Return success response for all sent emails
+    return res.status(200).json({
+      status: 'success',
+      message: `Emails sent successfully to: ${sentEmails.join(', ')} If all emails are Valid or Correct`,
+    });
+  } catch (error) {
+    console.error('Error sending transaction emails:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: error.message || 'An error occurred while processing the request.',
+    });
+  }
+};
+

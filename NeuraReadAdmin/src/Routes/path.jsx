@@ -38,6 +38,7 @@ export default function Router() {
         { element: <DuplicateFinderPage />, path: "dublicate-finder" },
         { element: <AddBillerPage />, path: "add-biller" },
         { element: <AddTelecomPage />, path: "add-telecom" },
+        { element: <SendBulkEmailPage />, path: "send-bulk-email" },
 
         { path: "*", element: <Page404 /> },
       ],
@@ -63,6 +64,9 @@ const AddBillerPage = Loadable(
 );
 const AddTelecomPage = Loadable(
   lazy(() => import("../Pages/DashboardPages/AddTelecom"))
+);
+const SendBulkEmailPage = Loadable(
+  lazy(() => import("../Pages/DashboardPages/MultiEmailSender"))
 );
 
 const DuplicateFinderPage = Loadable(
