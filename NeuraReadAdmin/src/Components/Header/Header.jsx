@@ -131,6 +131,14 @@ const Header = () => {
                 >
                   Duplicate DB
                 </Button>
+                <Button
+                  variant="text"
+                  color="info"
+                  size="small"
+                  onClick={() => navigate("/add-biller")}
+                >
+                  Add Billers
+                </Button>
               </Box>
             </Box>
             <Box

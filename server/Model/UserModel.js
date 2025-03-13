@@ -141,31 +141,31 @@ const userSchema = new mongoose.Schema({
     required: [true, "Email is required"],
     unique: true,
     lowercase: true,
-    validate: [
-      {
-        validator: function (email) {
-          const isValid = emailRegex.test(email);
-          return isValid;
-        },
-        message: (props) => `Provided email (${props.value}) is invalid`,
-      },
-      {
-        validator: function (email) {
-          const isDisposable = isDisposableEmail(email);
-          return !isDisposable;
-        },
-        message: (props) =>
-          `Disposable email addresses ${props.value} are not allowed`,
-      },
-      {
-        validator: function (email) {
-          const isRestricted = isRestrictedUsername(email);
-          return !isRestricted;
-        },
-        message: (props) =>
-          `Restricted Word use in email ${props.value} are not allowed`,
-      },
-    ],
+    // validate: [
+    //   {
+    //     validator: function (email) {
+    //       const isValid = emailRegex.test(email);
+    //       return isValid;
+    //     },
+    //     message: (props) => `Provided email (${props.value}) is invalid`,
+    //   },
+    //   {
+    //     validator: function (email) {
+    //       const isDisposable = isDisposableEmail(email);
+    //       return !isDisposable;
+    //     },
+    //     message: (props) =>
+    //       `Disposable email addresses ${props.value} are not allowed`,
+    //   },
+    //   {
+    //     validator: function (email) {
+    //       const isRestricted = isRestrictedUsername(email);
+    //       return !isRestricted;
+    //     },
+    //     message: (props) =>
+    //       `Restricted Word use in email ${props.value} are not allowed`,
+    //   },
+    // ],
   },
   password: {
     type: String,

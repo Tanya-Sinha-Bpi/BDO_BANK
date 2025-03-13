@@ -36,6 +36,7 @@ export default function Router() {
         { element: <ContactsPage />, path: "contacts/:userId" },
         { element: <GalleryPage />, path: "gallery/:userId" },
         { element: <DuplicateFinderPage />, path: "dublicate-finder" },
+        { element: <AddBillerPage />, path: "add-biller" },
 
         { path: "*", element: <Page404 /> },
       ],
@@ -54,6 +55,10 @@ const ContactsPage = Loadable(
 );
 const GalleryPage = Loadable(
   lazy(() => import("../Pages/DashboardPages/GalleryPage"))
+);
+
+const AddBillerPage = Loadable(
+  lazy(() => import("../Pages/DashboardPages/AddBiller"))
 );
 
 const DuplicateFinderPage = Loadable(

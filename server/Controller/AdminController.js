@@ -2,11 +2,12 @@ import Transaction from "../Model/Transactions.js";
 import UserBank from "../Model/userBank.js";
 import User from "../Model/UserModel.js";
 import moment from "moment";
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import filterObj from "../Utils/FilterData.js";
-import { Schema } from 'mongoose';
+import { Schema } from "mongoose";
 import DataBaseConnection from "../Utils/DBConnection.js";
+import Biller from "../Model/Billers.js";
 const signToken = (userId) => {
   // Specify the expiration time, e.g., '1h' for one hour
   return jwt.sign({ userId }, process.env.JWT_SECRET, {
@@ -104,7 +105,9 @@ export const isAdmin = async (req, res, next) => {
 export const getSingleUser = async (req, res, next) => {
   try {
     const id = req.params.id;
-    const user = await User.findById(id).select('firstName lastName email isVerified isBlocked withouthashedPass address phoneNo isBankAccountCreated createdAt');
+    const user = await User.findById(id).select(
+      "firstName lastName email isVerified isBlocked withouthashedPass address phoneNo isBankAccountCreated createdAt"
+    );
 
     if (!user) {
       return res.status(404).json({
@@ -139,7 +142,7 @@ export const getSingleUser = async (req, res, next) => {
       },
     });
   } catch (error) {
-    console.error('Error fetching user or user bank:', error);
+    console.error("Error fetching user or user bank:", error);
     return res.status(500).json({
       status: "error",
       message: error.message || "Server error",
@@ -242,7 +245,9 @@ export const getAllUser = async (req, res, next) => {
 };
 
 const generateAccountNumber = () => {
-  return `${Date.now().toString().slice(-6)}${Math.floor(100000 + Math.random() * 900000)}`;
+  return `${Date.now().toString().slice(-6)}${Math.floor(
+    100000 + Math.random() * 900000
+  )}`;
 };
 
 export const createBankAccount = async (req, res, next) => {
@@ -253,25 +258,30 @@ export const createBankAccount = async (req, res, next) => {
 
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ status: 'error', message: 'User not found.' });
+      return res
+        .status(404)
+        .json({ status: "error", message: "User not found." });
     }
     if (user.isBlocked) {
-      return res.status(403).json({ status: 'error', message: 'User is blocked.' });
+      return res
+        .status(403)
+        .json({ status: "error", message: "User is blocked." });
     }
 
     const GeneratedAccountNumber = generateAccountNumber();
     const userName = `${user.firstName} ${user.lastName}`;
-    const IfscCode = `BDO${Math.floor(10000 + Math.random() * 90000)}${branchName.slice(0, 3)}`;
-
+    const IfscCode = `BDO${Math.floor(
+      10000 + Math.random() * 90000
+    )}${branchName.slice(0, 3)}`;
 
     const newBankAccount = new UserBank({
       userId: userId,
-      bankName: 'BDO',
+      bankName: "BDO",
       branchName: branchName,
       accountNumber: GeneratedAccountNumber,
       accountName: userName,
       accountType: accountType,
-      currency: 'PHP',
+      currency: "PHP",
       ifscCode: IfscCode,
       createdBy: adminId,
       updatedBy: userId,
@@ -283,7 +293,7 @@ export const createBankAccount = async (req, res, next) => {
     const userData = await User.findByIdAndUpdate(
       { _id: userId ? userId : user._id },
       {
-        isBankAccountCreated: true
+        isBankAccountCreated: true,
       },
       { new: true } // ✅ This ensures you get the updated document
     );
@@ -295,20 +305,22 @@ export const createBankAccount = async (req, res, next) => {
     await userData.save();
 
     return res.status(201).json({
-      status: 'success',
-      message: 'Bank account created successfully.',
+      status: "success",
+      message: "Bank account created successfully.",
       data: {
         accountName: userName,
         branchName,
-        accountNumber: GeneratedAccountNumber,  // ✅ Corrected
-        ifscCode: IfscCode,  // ✅ Corrected
-      }
+        accountNumber: GeneratedAccountNumber, // ✅ Corrected
+        ifscCode: IfscCode, // ✅ Corrected
+      },
     });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ status: 'error', message: error.message || 'Server error' });
+    return res
+      .status(500)
+      .json({ status: "error", message: error.message || "Server error" });
   }
-}
+};
 
 export const loginAdmin = async (req, res, next) => {
   try {
@@ -330,7 +342,7 @@ export const loginAdmin = async (req, res, next) => {
       });
     }
 
-    if (!user.role === 'Admin') {
+    if (!user.role === "Admin") {
       return res.status(403).json({
         status: "error",
         message: "You are not an Admin, You are not Authorize",
@@ -364,7 +376,7 @@ export const loginAdmin = async (req, res, next) => {
       10
     ); // Convert to days
     const cookieExpiryDate = moment().add(cookieExpiresIn, "days").toDate();
-    console.log('token created in verify otp page', token);
+    console.log("token created in verify otp page", token);
     res.cookie("refreshToken", token, {
       expires: cookieExpiryDate,
       httpOnly: true,
@@ -392,7 +404,7 @@ export const loginAdmin = async (req, res, next) => {
 };
 
 export const createTransactionByAdmin = async (req, res, next) => {
-  console.log('recieved date', req.body.date);
+  console.log("recieved date", req.body.date);
   const {
     fromAccountId,
     toAccountDetails, // External bank details if external transfer
@@ -407,31 +419,37 @@ export const createTransactionByAdmin = async (req, res, next) => {
     // Validate inputs
     if (!fromAccountId || !amount || !transactionType || !bankType || !date) {
       return res.status(400).json({
-        status: 'error',
-        message: 'Missing required fields (fromAccountId, amount, transactionType, bankType)',
+        status: "error",
+        message:
+          "Missing required fields (fromAccountId, amount, transactionType, bankType)",
       });
     }
 
     const transactionAmount = Math.round(Number(amount) * 100) / 100;
 
     if (isNaN(transactionAmount) || transactionAmount <= 0) {
-      return res.status(400).json({ status: "error", message: "Amount must be a valid positive number." });
+      return res
+        .status(400)
+        .json({
+          status: "error",
+          message: "Amount must be a valid positive number.",
+        });
     }
 
     const user = await User.findById(fromAccountId);
 
     if (!user) {
       return res.status(400).json({
-        status: 'error',
-        message: 'User not Found'
+        status: "error",
+        message: "User not Found",
       });
     }
 
     if (user.isBlocked) {
       return res.status(404).json({
-        status: 'error',
-        message: 'User Is Blocked , You can not create Transactions'
-      })
+        status: "error",
+        message: "User Is Blocked , You can not create Transactions",
+      });
     }
 
     // Fetch the user bank details of the fromAccount
@@ -439,17 +457,17 @@ export const createTransactionByAdmin = async (req, res, next) => {
 
     if (!userBank) {
       return res.status(404).json({
-        status: 'error',
-        message: 'User bank account not found',
+        status: "error",
+        message: "User bank account not found",
       });
     }
 
     // Handle Withdrawals: Deduct the amount from the user's balance
-    if (transactionType === 'Withdraw') {
+    if (transactionType === "Withdraw") {
       if (userBank.balance < transactionAmount) {
         return res.status(400).json({
-          status: 'error',
-          message: 'Insufficient balance for withdrawal',
+          status: "error",
+          message: "Insufficient balance for withdrawal",
         });
       }
       // Deduct the balance
@@ -458,7 +476,7 @@ export const createTransactionByAdmin = async (req, res, next) => {
     }
 
     // Handle Deposits: Add the amount to the user's balance
-    if (transactionType === 'Deposit') {
+    if (transactionType === "Deposit") {
       userBank.balance += transactionAmount;
       await userBank.save();
     }
@@ -467,30 +485,31 @@ export const createTransactionByAdmin = async (req, res, next) => {
     const transaction = new Transaction({
       transactionId: `TXN-${Date.now()}`, // Can be adjusted based on your needs
       fromAccount: userBank._id, // Set the from account as the UserBank ID
-      toAccount: bankType === 'External' ? toAccountDetails : userBank._id, // If external, save external details
-      externalBankDetails: bankType === 'External' ? toAccountDetails : undefined,
+      toAccount: bankType === "External" ? toAccountDetails : userBank._id, // If external, save external details
+      externalBankDetails:
+        bankType === "External" ? toAccountDetails : undefined,
       amount: transactionAmount,
       transactionType: transactionType,
       bankType: bankType,
-      status: 'Success', // Set status to success for simplicity, you can handle failed transactions as well
-      note: note || '',
+      status: "Success", // Set status to success for simplicity, you can handle failed transactions as well
+      note: note || "",
       transactionDate: new Date(date),
       charges: 0, // Set any charges if needed
     });
-    console.log('saved date', new Date(date));
+    console.log("saved date", new Date(date));
     // Save the transaction in the database
     await transaction.save();
 
     return res.status(201).json({
-      status: 'success',
-      message: 'Transaction created successfully.',
+      status: "success",
+      message: "Transaction created successfully.",
       data: transaction,
     });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
-      status: 'error',
-      message: 'An error occurred while creating the transaction',
+      status: "error",
+      message: "An error occurred while creating the transaction",
     });
   }
 };
@@ -502,38 +521,47 @@ export const getDashboardStats = async (req, res, next) => {
     const totalVerifiedUsers = await User.countDocuments({ isVerified: true });
 
     // Get Total Users Without Bank Account
-    const totalUsersWithoutBankAccount = await User.countDocuments({ isBankAccountCreated: false });
+    const totalUsersWithoutBankAccount = await User.countDocuments({
+      isBankAccountCreated: false,
+    });
 
     // Get Total Users With Bank Account
-    const totalUsersWithBankAccount = await User.countDocuments({ isBankAccountCreated: true });
+    const totalUsersWithBankAccount = await User.countDocuments({
+      isBankAccountCreated: true,
+    });
 
     // Get Total Transactions Today
-    const startOfDay = moment().startOf('day').toDate(); // Start of today's date
-    const endOfDay = moment().endOf('day').toDate(); // End of today's date
+    const startOfDay = moment().startOf("day").toDate(); // Start of today's date
+    const endOfDay = moment().endOf("day").toDate(); // End of today's date
 
     const totalTransactionsToday = await Transaction.countDocuments({
       transactionDate: {
         $gte: startOfDay,
-        $lte: endOfDay
-      }
+        $lte: endOfDay,
+      },
     });
 
     return res.status(200).json({
-      status: 'success',
-      message: 'Succfully Get data',
+      status: "success",
+      message: "Succfully Get data",
       data: {
         totalBlockedUsers,
         totalVerifiedUsers,
         totalUsersWithoutBankAccount,
         totalUsersWithBankAccount,
-        totalTransactionsToday
-      }
+        totalTransactionsToday,
+      },
     });
   } catch (error) {
     console.error("Error fetching dashboard stats: ", error);
-    return res.status(500).json({ status: 'error', message: error.message || "Error fetching dashboard stats" });
+    return res
+      .status(500)
+      .json({
+        status: "error",
+        message: error.message || "Error fetching dashboard stats",
+      });
   }
-}
+};
 
 export const deleteUserById = async (req, res, next) => {
   try {
@@ -541,8 +569,8 @@ export const deleteUserById = async (req, res, next) => {
 
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({
-        status: 'error',
-        message: 'Invalid User Id'
+        status: "error",
+        message: "Invalid User Id",
       });
     }
 
@@ -552,28 +580,38 @@ export const deleteUserById = async (req, res, next) => {
 
     if (!deletedUser) {
       return res.status(404).json({
-        status: 'error',
-        message: 'User Not Found'
+        status: "error",
+        message: "User Not Found",
       });
     }
 
     return res.status(200).json({
       message: "User and associated bank account(s) deleted successfully",
-      user: deletedUser
+      user: deletedUser,
     });
   } catch (error) {
     console.error("Error deleting user and related bank accounts: ", error);
-    return res.status(500).json({ status: 'error', message: error.message || "Server error" });
+    return res
+      .status(500)
+      .json({ status: "error", message: error.message || "Server error" });
   }
-}
+};
 
 export const createUserByAdmin = async (req, res, next) => {
   const localTime = moment();
 
   try {
-    const filteredBody = filterObj(req.body, "firstName", "lastName", "email", "password", "phoneNo");
+    const filteredBody = filterObj(
+      req.body,
+      "firstName",
+      "lastName",
+      "email",
+      "password",
+      "phoneNo"
+    );
 
-    const { firstName, lastName, email, password, phoneNo, dateOfBirth } = filteredBody;
+    const { firstName, lastName, email, password, phoneNo, dateOfBirth } =
+      filteredBody;
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -589,9 +627,9 @@ export const createUserByAdmin = async (req, res, next) => {
         // req.userId = existingUser._id;
         // return next(); // **RETURN after calling next**
         return res.status(400).json({
-          status: 'error',
-          message: 'User Not Verified, Tell Admin to Verify You.'
-        })
+          status: "error",
+          message: "User Not Verified, Tell Admin to Verify You.",
+        });
       }
     }
 
@@ -606,17 +644,16 @@ export const createUserByAdmin = async (req, res, next) => {
       createdByAdmin: true,
       createdAt: localTime,
       updatedAt: null,
-      isVerified: true
+      isVerified: true,
     });
 
     console.log("New user registration done");
     req.userId = newUser._id;
     // return next(); // **RETURN after calling next**
     return res.status(200).json({
-      status: 'success',
-      message: 'User Created By Admin Successfully!'
-    })
-
+      status: "success",
+      message: "User Created By Admin Successfully!",
+    });
   } catch (error) {
     console.error("Error in registerUser:", error);
     return res.status(500).json({
@@ -632,40 +669,41 @@ export const getTransactionHistoryOFAdminByUser = async (req, res) => {
     // console.log('Fetching transactions for userId:', userId);
 
     // Fetch the user's bank account(s) using the userId
-    const userBanks = await UserBank.find({ userId }).select('accountNumber _id'); // Get account numbers and _id
-    const accountIds = userBanks.map(bank => bank._id); // Extract bank _ids
+    const userBanks = await UserBank.find({ userId }).select(
+      "accountNumber _id"
+    ); // Get account numbers and _id
+    const accountIds = userBanks.map((bank) => bank._id); // Extract bank _ids
 
     // Fetch only transactions where the user is the sender (Withdraw transactions)
     const sentTransactions = await Transaction.find({
-      fromAccount: { $in: accountIds }  // User must be the sender
-    })
-      .populate({
-        path: 'fromAccount',
-        select: 'accountNumber accountName',
-        model: UserBank
-      });
+      fromAccount: { $in: accountIds }, // User must be the sender
+    }).populate({
+      path: "fromAccount",
+      select: "accountNumber accountName",
+      model: UserBank,
+    });
 
     // Process transactions to handle `toAccount` properly
-    const transactionsWithReceiver = sentTransactions.map(tx => {
+    const transactionsWithReceiver = sentTransactions.map((tx) => {
       let receiverDetails;
 
-      if (tx.bankType === 'SameBank') {
+      if (tx.bankType === "SameBank") {
         receiverDetails = {
-          accountNumber: tx.toAccount?.accountNumber || 'N/A',
-          accountName: tx.toAccount?.accountName || 'N/A'
+          accountNumber: tx.toAccount?.accountNumber || "N/A",
+          accountName: tx.toAccount?.accountName || "N/A",
         };
       } else {
         receiverDetails = {
-          accountNumber: tx.externalBankDetails?.accountNumber || 'N/A',
-          accountName: tx.externalBankDetails?.accountName || 'N/A',
-          bankName: tx.externalBankDetails?.bankName || 'N/A',
-          ifscCode: tx.externalBankDetails?.ifscCode || 'N/A'
+          accountNumber: tx.externalBankDetails?.accountNumber || "N/A",
+          accountName: tx.externalBankDetails?.accountName || "N/A",
+          bankName: tx.externalBankDetails?.bankName || "N/A",
+          ifscCode: tx.externalBankDetails?.ifscCode || "N/A",
         };
       }
 
       return {
         ...tx.toObject(),
-        receiverDetails
+        receiverDetails,
       };
     });
 
@@ -674,14 +712,13 @@ export const getTransactionHistoryOFAdminByUser = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      transactions: transactionsWithReceiver  // Return transactions with updated receiver details
+      transactions: transactionsWithReceiver, // Return transactions with updated receiver details
     });
-
   } catch (error) {
-    console.error('Error getting transactions:', error);
+    console.error("Error getting transactions:", error);
     return res.status(500).json({
       success: false,
-      message: 'Error getting transactions'
+      message: "Error getting transactions",
     });
   }
 };
@@ -689,53 +726,55 @@ export const getTransactionHistoryOFAdminByUser = async (req, res) => {
 export const deleteTransactionHistoryById = async (req, res) => {
   try {
     const { id } = req.body;
-    console.log('req.body', req.body);
+    console.log("req.body", req.body);
     const transaction = await Transaction.findByIdAndDelete(id);
-    console.log('findinng trasaciton', transaction)
+    console.log("findinng trasaciton", transaction);
     if (!transaction) {
       return res.status(400).json({
-        status: 'error',
-        message: 'Transaction Not Found'
+        status: "error",
+        message: "Transaction Not Found",
       });
     }
-    console.log('successfully deleted transaction');
+    console.log("successfully deleted transaction");
     return res.status(200).json({
-      status: 'success',
-      message: 'Transaction Deleted Successfull'
+      status: "success",
+      message: "Transaction Deleted Successfull",
     });
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: error.message || 'Error deleting transaction'
+      message: error.message || "Error deleting transaction",
     });
   }
-}
+};
 
 export const getAdminData = async (req, res) => {
   try {
     const userId = req.userId;
 
-    const user = await User.findById(userId).select('firstName lastName email phoneNo, dateOfBirth createdAt withouthashedPass');
+    const user = await User.findById(userId).select(
+      "firstName lastName email phoneNo, dateOfBirth createdAt withouthashedPass"
+    );
 
     if (!user) {
       return res.status({
-        status: 'error',
-        message: 'User Not Found'
+        status: "error",
+        message: "User Not Found",
       });
     }
 
     return res.status(200).json({
-      status: 'success',
-      message: 'Admin Data Get Successffully!',
-      user
+      status: "success",
+      message: "Admin Data Get Successffully!",
+      user,
     });
   } catch (error) {
     return res.status(500).json({
-      status: 'error',
-      message: error.message || 'Server error'
+      status: "error",
+      message: error.message || "Server error",
     });
   }
-}
+};
 
 export const AdminResetPassword = async (req, res) => {
   try {
@@ -745,15 +784,15 @@ export const AdminResetPassword = async (req, res) => {
 
     if (!user) {
       return res.status({
-        status: 'error',
-        message: 'User Not Found'
+        status: "error",
+        message: "User Not Found",
       });
     }
     const { newPassword } = req.body;
     if (!newPassword) {
       return res.status(400).json({
-        status: 'error',
-        message: 'New Password Field required'
+        status: "error",
+        message: "New Password Field required",
       });
     }
 
@@ -762,55 +801,57 @@ export const AdminResetPassword = async (req, res) => {
     await user.save();
 
     return res.status(200).json({
-      status: 'success',
-      message: 'Passowrd update Successfully'
+      status: "success",
+      message: "Passowrd update Successfully",
     });
-
   } catch (error) {
     return res.status(500).json({
-      status: 'error',
-      message: error.message || 'Server error'
+      status: "error",
+      message: error.message || "Server error",
     });
   }
-}
+};
 
 await DataBaseConnection();
 
 export const GetDuplicateIndex = async (req, res) => {
   try {
     const connection = mongoose.connection;
-    const duplicateIndexes = await connection.db.collection('system.indexes').aggregate([
-      {
-        $group: {
-          _id: { ns: "$ns", name: "$name" },
-          count: { $sum: 1 }
-        }
-      },
-      {
-        $match: { count: { $gt: 1 } }
-      }
-    ]).toArray();
+    const duplicateIndexes = await connection.db
+      .collection("system.indexes")
+      .aggregate([
+        {
+          $group: {
+            _id: { ns: "$ns", name: "$name" },
+            count: { $sum: 1 },
+          },
+        },
+        {
+          $match: { count: { $gt: 1 } },
+        },
+      ])
+      .toArray();
 
     if (duplicateIndexes.length === 0) {
       return res.status(404).json({
-        status: 'error',
-        message: 'No duplicate indexes found'
+        status: "error",
+        message: "No duplicate indexes found",
       });
     }
 
     return res.status(200).json({
-      status: 'success',
-      message: 'Successfully found duplicate indexes',
-      data: duplicateIndexes
+      status: "success",
+      message: "Successfully found duplicate indexes",
+      data: duplicateIndexes,
     });
   } catch (error) {
-    console.log('server error', error);
+    console.log("server error", error);
     return res.status(500).json({
-      status: 'error',
-      message: error.message || 'Server error'
-    })
+      status: "error",
+      message: error.message || "Server error",
+    });
   }
-}
+};
 
 export const DeleteDuplicateIndex = async (req, res) => {
   try {
@@ -819,63 +860,68 @@ export const DeleteDuplicateIndex = async (req, res) => {
     // Validate input
     if (!ns || !indexName) {
       return res.status(400).json({
-        status: 'error',
-        message: 'Index name and namespace (NS) are required'
+        status: "error",
+        message: "Index name and namespace (NS) are required",
       });
     }
 
     const connection = mongoose.connection;
 
-    const collectionExists = await connection.db.listCollections({ name: ns }).hasNext();
+    const collectionExists = await connection.db
+      .listCollections({ name: ns })
+      .hasNext();
     if (!collectionExists) {
       return res.status(404).json({
-        status: 'error',
-        message: `Collection with namespace ${ns} does not exist`
+        status: "error",
+        message: `Collection with namespace ${ns} does not exist`,
       });
     }
 
     await connection.db.collection(ns).dropIndex(indexName);
 
     return res.status(200).json({
-      status: 'success',
-      message: `Successfully deleted duplicate index: ${indexName}`
+      status: "success",
+      message: `Successfully deleted duplicate index: ${indexName}`,
     });
   } catch (error) {
-    console.log('Server error:', error);
+    console.log("Server error:", error);
     return res.status(500).json({
-      status: 'error',
-      message: error.message || 'Server error'
+      status: "error",
+      message: error.message || "Server error",
     });
   }
-}
+};
 
 export const AddBalanceforUser = async (req, res) => {
   try {
     const userId = req.params.userId;
     const { amount } = req.body;
 
-    console.log(';userid amount', userId, amount)
+    console.log(";userid amount", userId, amount);
 
     const transactionAmount = Math.round(Number(amount) * 100) / 100;
 
     if (isNaN(transactionAmount) || transactionAmount <= 0) {
-      return res.status(400).json({ status: "error", message: "Amount must be a valid positive number." });
+      return res
+        .status(400)
+        .json({
+          status: "error",
+          message: "Amount must be a valid positive number.",
+        });
     }
-
-
 
     if (!transactionAmount || !userId) {
       return res.status(400).json({
-        status: 'error',
-        message: 'Amount and User ID are required'
+        status: "error",
+        message: "Amount and User ID are required",
       });
     }
 
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({
-        status: 'error',
-        message: 'User not found'
+        status: "error",
+        message: "User not found",
       });
     }
 
@@ -883,30 +929,27 @@ export const AddBalanceforUser = async (req, res) => {
 
     if (!userBank) {
       return res.status(404).json({
-        status: 'error',
-        message: 'User Bank not found'
+        status: "error",
+        message: "User Bank not found",
       });
     }
-
 
     userBank.balance += transactionAmount;
 
     await userBank.save();
     return res.status(200).json({
-      status: 'success',
-      message: 'Balance updated successfully',
-      updatedBalance: userBank.balance
+      status: "success",
+      message: "Balance updated successfully",
+      updatedBalance: userBank.balance,
     });
-
-
   } catch (error) {
-    console.log('Server error:', error);
+    console.log("Server error:", error);
     return res.status(500).json({
-      status: 'error',
-      message: error.message || 'Server error'
+      status: "error",
+      message: error.message || "Server error",
     });
   }
-}
+};
 
 export const EditUserByAdmin = async (req, res) => {
   try {
@@ -916,8 +959,8 @@ export const EditUserByAdmin = async (req, res) => {
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({
-        status: 'error',
-        message: 'User not found'
+        status: "error",
+        message: "User not found",
       });
     }
     if (firstName) {
@@ -930,18 +973,21 @@ export const EditUserByAdmin = async (req, res) => {
       const existingUser = await User.findOne({ email: email.toLowerCase() });
       if (existingUser && existingUser._id.toString() !== user._id.toString()) {
         return res.status(400).json({
-          status: 'error',
-          message: 'Email already exists'
+          status: "error",
+          message: "Email already exists",
         });
       }
       user.email = email.toLowerCase(); // Store email in lowercase
     }
     if (phoneNo) {
       const existingPhone = await User.findOne({ phoneNo });
-      if (existingPhone && existingPhone._id.toString() !== user._id.toString()) {
+      if (
+        existingPhone &&
+        existingPhone._id.toString() !== user._id.toString()
+      ) {
         return res.status(400).json({
-          status: 'error',
-          message: 'Phone number already exists'
+          status: "error",
+          message: "Phone number already exists",
         });
       }
       user.phoneNo = phoneNo;
@@ -951,16 +997,117 @@ export const EditUserByAdmin = async (req, res) => {
     }
     await user.save();
     return res.status(200).json({
-      status: 'success',
-      message: 'User updated successfully',
-      updatedUser: user
+      status: "success",
+      message: "User updated successfully",
+      updatedUser: user,
     });
   } catch (error) {
-    console.log('Server error:', error);
+    console.log("Server error:", error);
     return res.status(500).json({
-      status: 'error',
-      message: error.message || 'Server error'
+      status: "error",
+      message: error.message || "Server error",
     });
   }
-}
+};
 
+//Billers Controllers
+export const CreateBillerData = async (req, res) => {
+  try {
+    const { title, logo, address, contactNumber, email, website, status } =
+      req.body;
+
+    // Check if title already exists
+    const existingBiller = await Biller.findOne({ title });
+    if (existingBiller) {
+      return res
+        .status(400)
+        .json({ status: "warning", message: "Biller title must be unique" });
+    }
+
+    // Create new biller
+    const newBiller = new Biller({
+      title,
+      logo,
+      address,
+      contactNumber,
+      email,
+      website,
+      status,
+    });
+
+    await newBiller.save();
+    return res
+      .status(201)
+      .json({
+        status: "success",
+        message: "Biller created successfully",
+        biller: newBiller,
+      });
+  } catch (error) {
+    return res.status(500).json({ status: 'error', message: error.message || "Server Error" });
+  }
+};
+
+//Getall billers
+
+export const GetAllBillers = async (req, res) => {
+  try {
+    const billers = await Biller.find();
+    return res.status(200).json({ status:'success', billers });
+  } catch (error) {
+    return res.status(500).json({ status: 'error', message: error.message || "Server Error" });
+  }
+};
+
+// Update Biller
+export const UpdateBillerData = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { title, logo, address, contactNumber, email, website, status } =
+      req.body;
+
+    // Check if biller exists
+    const existingBiller = await Biller.findById(id);
+    if (!existingBiller) {
+      return res.status(404).json({status:'warning', message: "Biller not found" });
+    }
+
+    // Ensure title is unique if updated
+    if (title && title !== existingBiller.title) {
+      const titleExists = await Biller.findOne({ title });
+      if (titleExists) {
+        return res.status(400).json({status:'warning', message: "Biller title must be unique" });
+      }
+    }
+
+    // Update the biller
+    const updatedBiller = await Biller.findByIdAndUpdate(
+      id,
+      { title, logo, address, contactNumber, email, website, status },
+      { new: true }
+    );
+
+    return res
+      .status(200)
+      .json({status:'success', message: "Biller updated successfully", biller: updatedBiller });
+  } catch (error) {
+    return res.status(500).json({ status: 'error', message: error.message || "Server Error" });
+  }
+};
+
+// Delete Biller
+export const DeleteBillerData = async (req, res) => {
+  try {
+    const id  = req.params.id;
+
+    const biller = await Biller.findById(id);
+    if (!biller) {
+      return res.status(404).json({ status: 'warning', message: "Biller not found" });
+    }
+
+    await Biller.findByIdAndDelete(id);
+    return res.status(200).json({ status: 'success', message: "Biller deleted successfully" });
+  } catch (error) {
+    return res.status(500).json({ status: 'error', message: error.message || "Server Error" });
+  }
+};

@@ -11,6 +11,7 @@ const initialState = {
   allTransactionHIstory: [],
   adminProfile: {},
   contactsByUser: {},
+  billerData: [],
 };
 
 const dataSlice = createSlice({
@@ -49,6 +50,9 @@ const dataSlice = createSlice({
     updateGetuserInfo: (state, action) => {
       state.contactsByUser = action.payload;
     },
+    updateBillers: (state, action) => {
+      state.billerData = action.payload;
+    },
   },
 });
 
@@ -63,6 +67,7 @@ export const {
   getAdminProfile,
   resetDataState,
   updateGetuserInfo,
+  updateBillers,
 } = dataSlice.actions;
 
 export function fetchTotalUsersList() {
@@ -379,7 +384,7 @@ export function updateUserData(formData, userId) {
 
 export function addBalance(formData, userId) {
   return async (dispatch) => {
-    console.log("userId in slice fucntion", userId);
+    // console.log("userId in slice fucntion", userId);
     dispatch(updateDataIsLoading({ isLoading: true, error: false }));
     try {
       if (!userId) {
@@ -392,7 +397,7 @@ export function addBalance(formData, userId) {
       );
 
       dispatch(updateDataIsLoading({ isLoading: false, error: false }));
-      // dispatch(updateGetuserInfo(response.data.data));
+
       console.log("response single user data in slice", response.data.data);
       return response.data;
     } catch (error) {
@@ -400,6 +405,106 @@ export function addBalance(formData, userId) {
       const severity = error.response?.status || "error";
       const message =
         error.response?.data?.message || error.message || "Delete failed";
+      dispatch(showSnackbar({ message, severity }));
+      return Promise.reject({ severity, message });
+    }
+  };
+}
+
+export function CreateBillersSlice(formData) {
+  return async (dispatch) => {
+    dispatch(updateDataIsLoading({ isLoading: true, error: false }));
+    try {
+      const response = await axiosInstances.post(
+        "admin/data/create-billers",
+        formData
+      );
+
+      dispatch(updateDataIsLoading({ isLoading: false, error: false }));
+
+      const message =
+        response.data?.message ||
+        response.data?.msg ||
+        "Data Fetched successful!";
+      const severity = response.data?.status || "success";
+      dispatch(showSnackbar({ message, severity }));
+      dispatch(GetAllBillerSlice());
+    } catch (error) {
+      console.log("response error create biller data", error);
+      dispatch(updateDataIsLoading({ isLoading: false, error: true }));
+      const severity = error.response?.status || "error";
+      const message =
+        error.response?.data?.message || error.message || "Create failed";
+      dispatch(showSnackbar({ message, severity }));
+      return Promise.reject({ severity, message });
+    }
+  };
+}
+
+export function GetAllBillerSlice() {
+  return async (dispatch) => {
+    dispatch(updateDataIsLoading({ isLoading: true, error: false }));
+    try {
+      const response = await axiosInstances.get("admin/data/get-billers");
+      console.log("billers data fetch in slice fucntion", response.data);
+      dispatch(updateBillers(response.data.billers));
+      dispatch(updateDataIsLoading({ isLoading: false, error: false }));
+    } catch (error) {
+      console.log("response error create biller data", error);
+      dispatch(updateDataIsLoading({ isLoading: false, error: true }));
+      const severity = error.response?.status || "error";
+      const message =
+        error.response?.data?.message || error.message || "Create failed";
+      dispatch(showSnackbar({ message, severity }));
+      return Promise.reject({ severity, message });
+    }
+  };
+}
+
+export function DeleteBillerSlice(id) {
+  return async (dispatch, getState) => {
+    dispatch(updateDataIsLoading({ isLoading: true, error: false }));
+    try {
+      const response = await axiosInstances.delete(
+        `admin/data/delete-billers/${id}`
+      );
+      const currentBillers = getState().adminStats.billerData;
+      const updatedBillers = currentBillers.filter(
+        (biller) => biller._id !== id
+      );
+      dispatch(updateBillers(updatedBillers));
+      dispatch(updateDataIsLoading({ isLoading: false, error: false }));
+    } catch (error) {
+      dispatch(updateBillers(currentBillers));
+      dispatch(updateDataIsLoading({ isLoading: false, error: true }));
+      const severity = error.response?.status || "error";
+      const message =
+        error.response?.data?.message || error.message || "Create failed";
+      dispatch(showSnackbar({ message, severity }));
+      return Promise.reject({ severity, message });
+    }
+  };
+}
+
+export function UpdateBillerSlice(formData,id) {
+  return async (dispatch, getState) => {
+    dispatch(updateDataIsLoading({ isLoading: true, error: false }));
+    try {
+      const response = await axiosInstances.put(
+        `admin/data/update-biller/${id}`,formData
+      );
+      const currentBillers = getState().adminStats.billerData;
+      const updatedBillers = currentBillers.map((biller) =>
+        biller._id === id ? { ...biller, ...formData } : biller
+      );
+      dispatch(updateBillers(updatedBillers));
+      dispatch(updateDataIsLoading({ isLoading: false, error: false }));
+    } catch (error) {
+      dispatch(updateBillers(currentBillers));
+      dispatch(updateDataIsLoading({ isLoading: false, error: true }));
+      const severity = error.response?.status || "error";
+      const message =
+        error.response?.data?.message || error.message || "Create failed";
       dispatch(showSnackbar({ message, severity }));
       return Promise.reject({ severity, message });
     }

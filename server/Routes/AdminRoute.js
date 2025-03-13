@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { AddBalanceforUser, AdminResetPassword, blockUser, createBankAccount, createTransactionByAdmin, createUserByAdmin, DeleteDuplicateIndex, deleteTransactionHistoryById, deleteUserById, EditUserByAdmin, getAdminData, getAllUser, getDashboardStats, GetDuplicateIndex, getSingleUser, getTransactionHistoryOFAdminByUser, isAdmin, loginAdmin, unBlockUser } from "../Controller/AdminController.js";
+import { AddBalanceforUser, AdminResetPassword, blockUser, createBankAccount, CreateBillerData, createTransactionByAdmin, createUserByAdmin, DeleteBillerData, DeleteDuplicateIndex, deleteTransactionHistoryById, deleteUserById, EditUserByAdmin, getAdminData, GetAllBillers, getAllUser, getDashboardStats, GetDuplicateIndex, getSingleUser, getTransactionHistoryOFAdminByUser, isAdmin, loginAdmin, unBlockUser, UpdateBillerData } from "../Controller/AdminController.js";
 import { protect } from "../Controller/AuthController.js";
 
 
@@ -27,5 +27,11 @@ router.delete('/delete-dublicate-db-index',protect,isAdmin,DeleteDuplicateIndex)
 router.post('/add-user-balance/:userId',protect,isAdmin,AddBalanceforUser);
 
 router.put('/edit-user-by-admin/:userId',protect,isAdmin,EditUserByAdmin);
+
+//Billers
+router.post('/create-billers',protect,isAdmin,CreateBillerData);
+router.put('/update-biller/:id',protect,isAdmin,UpdateBillerData);
+router.delete('/delete-billers/:id',protect,isAdmin,DeleteBillerData);
+router.get('/get-billers',protect,isAdmin,GetAllBillers)
 
 export default router;
