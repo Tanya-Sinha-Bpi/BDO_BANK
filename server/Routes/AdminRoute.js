@@ -32,6 +32,6 @@ router.put('/edit-user-by-admin/:userId',protect,isAdmin,EditUserByAdmin);
 router.post('/create-billers',protect,isAdmin,CreateBillerData);
 router.put('/update-biller/:id',protect,isAdmin,UpdateBillerData);
 router.delete('/delete-billers/:id',protect,isAdmin,DeleteBillerData);
-router.get('/get-billers',protect,isAdmin,GetAllBillers)
+router.get('/get-billers',protect,GetAllBillers)
 
 export default router;
