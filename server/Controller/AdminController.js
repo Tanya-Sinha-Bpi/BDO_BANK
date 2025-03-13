@@ -1054,7 +1054,7 @@ export const CreateBillerData = async (req, res) => {
 export const GetAllBillers = async (req, res) => {
   try {
     const billers = await Biller.find();
-    return res.status(200).json({ status:'success', billers });
+    return res.status(200).json({ status: 'success', billers });
   } catch (error) {
     return res.status(500).json({ status: 'error', message: error.message || "Server Error" });
   }
@@ -1070,14 +1070,14 @@ export const UpdateBillerData = async (req, res) => {
     // Check if biller exists
     const existingBiller = await Biller.findById(id);
     if (!existingBiller) {
-      return res.status(404).json({status:'warning', message: "Biller not found" });
+      return res.status(404).json({ status: 'warning', message: "Biller not found" });
     }
 
     // Ensure title is unique if updated
     if (title && title !== existingBiller.title) {
       const titleExists = await Biller.findOne({ title });
       if (titleExists) {
-        return res.status(400).json({status:'warning', message: "Biller title must be unique" });
+        return res.status(400).json({ status: 'warning', message: "Biller title must be unique" });
       }
     }
 
@@ -1090,7 +1090,7 @@ export const UpdateBillerData = async (req, res) => {
 
     return res
       .status(200)
-      .json({status:'success', message: "Biller updated successfully", biller: updatedBiller });
+      .json({ status: 'success', message: "Biller updated successfully", biller: updatedBiller });
   } catch (error) {
     return res.status(500).json({ status: 'error', message: error.message || "Server Error" });
   }
@@ -1099,7 +1099,7 @@ export const UpdateBillerData = async (req, res) => {
 // Delete Biller
 export const DeleteBillerData = async (req, res) => {
   try {
-    const id  = req.params.id;
+    const id = req.params.id;
 
     const biller = await Biller.findById(id);
     if (!biller) {
@@ -1158,7 +1158,7 @@ export const CreateTelecomData = async (req, res) => {
 export const GetAllTelecom = async (req, res) => {
   try {
     const telecom = await TelecomProvider.find();
-    return res.status(200).json({ status:'success', telecom });
+    return res.status(200).json({ status: 'success', telecom });
   } catch (error) {
     return res.status(500).json({ status: 'error', message: error.message || "Server Error" });
   }
@@ -1174,14 +1174,14 @@ export const UpdateTelecomData = async (req, res) => {
     // Check if biller exists
     const existingBiller = await TelecomProvider.findById(id);
     if (!existingBiller) {
-      return res.status(404).json({status:'warning', message: "Teleocm providder not found" });
+      return res.status(404).json({ status: 'warning', message: "Teleocm providder not found" });
     }
 
     // Ensure title is unique if updated
     if (title && title !== existingBiller.title) {
       const titleExists = await TelecomProvider.findOne({ title });
       if (titleExists) {
-        return res.status(400).json({status:'warning', message: "Telecom Provider title must be unique" });
+        return res.status(400).json({ status: 'warning', message: "Telecom Provider title must be unique" });
       }
     }
 
@@ -1194,7 +1194,7 @@ export const UpdateTelecomData = async (req, res) => {
 
     return res
       .status(200)
-      .json({status:'success', message: "Telecom Provider updated successfully", telecom: updatedBiller });
+      .json({ status: 'success', message: "Telecom Provider updated successfully", telecom: updatedBiller });
   } catch (error) {
     return res.status(500).json({ status: 'error', message: error.message || "Server Error" });
   }
@@ -1203,7 +1203,7 @@ export const UpdateTelecomData = async (req, res) => {
 // Delete Telecom
 export const DeleteTelecomData = async (req, res) => {
   try {
-    const id  = req.params.id;
+    const id = req.params.id;
 
     const biller = await TelecomProvider.findById(id);
     if (!biller) {
@@ -1214,5 +1214,82 @@ export const DeleteTelecomData = async (req, res) => {
     return res.status(200).json({ status: 'success', message: "Telecom deleted successfully" });
   } catch (error) {
     return res.status(500).json({ status: 'error', message: error.message || "Server Error" });
+  }
+};
+
+export const closeAccount = async (req, res) => {
+  try {
+    const { accountNumber } = req.body; // Account number to close
+
+    // Find the bank account
+    const userBank = await UserBank.findOne({ accountNumber });
+
+    if (!userBank) {
+      return res.status(404).json({ status: 'warning', message: 'Bank account not found.' });
+    }
+
+    // Check if closure request exists
+    if (!userBank.accountClosedRequest) {
+      return res.status(400).json({ status: 'warning', message: 'No closure request for this account.' });
+    }
+
+    // Close the account
+    userBank.accountClosed = true;
+    userBank.accountClosedRequest = false; // Remove closure request
+    userBank.status = 'Closed';
+    userBank.accountClosedDate = new Date(); // Store when the account was closed
+    userBank.updatedBy = req.userId; // Store admin who closed it
+
+    await userBank.save();
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'Account successfully closed.',
+      data: userBank
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ status: 'error', message: error.message || 'An error occurred while processing the request.' });
+  }
+};
+
+// Controller to process account reopening (admin action)
+export const reopenAccount = async (req, res) => {
+  try {
+    const { accountNumber } = req.body; // Account number to reopen
+
+    // Find the bank account
+    const userBank = await UserBank.findOne({ accountNumber });
+
+    if (!userBank) {
+      return res.status(404).json({ status: 'warning', message: 'Bank account not found.' });
+    }
+
+    // Check if the account is actually closed
+    if (!userBank.accountClosed) {
+      return res.status(400).json({ status: 'warning', message: 'Account is not closed. Cannot reopen.' });
+    }
+
+    // Check if reopening request exists
+    if (!userBank.accountReopenRequest) {
+      return res.status(400).json({ status: 'warning', message: 'No reopening request for this account.' });
+    }
+
+    // Reopen the account
+    userBank.accountClosed = false;
+    userBank.accountReopenRequest = false; // Remove reopening request
+    userBank.status = 'Active';
+    userBank.updatedBy = req.userId; // Store admin who reopened it
+
+    await userBank.save();
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'Account successfully reopened.',
+      data: userBank
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ status: 'error', message: error.message || 'An error occurred while processing the request.' });
   }
 };

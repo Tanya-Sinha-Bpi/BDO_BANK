@@ -6,7 +6,7 @@ const userBankSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    accountName:{
+    accountName: {
         type: String,
         required: true,
         // unique: true, // Ensure account name is unique
@@ -58,6 +58,26 @@ const userBankSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: false
+    },
+    accountClosedRequest: {
+        type: Boolean,
+        default: false
+    },
+    accountReopenRequest: {
+        type: Boolean,
+        default: false
+    },
+    accountClosedRequestDate:{
+        type: Date,
+        default: null
+    },
+    accountClosed:{
+        type: Boolean,
+        default: false,
+    },
+    accountClosedDate: {
+        type: Date,
+        default: null
     }
 }, { timestamps: true });
 

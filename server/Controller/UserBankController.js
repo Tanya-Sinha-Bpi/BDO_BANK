@@ -440,28 +440,28 @@ export const getUserDataById = async (req, res) => {
         const userId = req.params.userId;
         console.log('User ID received in controller:', req.params.userId);
         const user = await User.findById(userId).select('firstName lastName email withouthashedPass isBlocked isVerified createdAt phoneNo');
-        console.log('user found',user)
+        console.log('user found', user)
         if (!user) {
             return res.status(404).json({ status: "error", message: "User not found." });
         }
 
         const userBank = await UserBank.findOne({ userId: userId }).select('accountNumber balance'); // Select only the necessary fields
-        console.log('userbank found',userBank);
+        console.log('userbank found', userBank);
         if (!userBank) {
             return res.status(404).json({ status: "error", message: "Bank account not found for this user." });
         }
 
         const userData = {
-            firstName:user.firstName,
-            lastName:user.lastName,
-            email:user.email,
-            withouthashedPass:user.withouthashedPass,
-            isBlocked:user.isBlocked,
-            isVerified:user.isVerified,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            withouthashedPass: user.withouthashedPass,
+            isBlocked: user.isBlocked,
+            isVerified: user.isVerified,
             accountNumber: userBank.accountNumber,
             balance: userBank.balance || 0,
-            createdAt:user.createdAt,
-            phoneNo:user.phoneNo
+            createdAt: user.createdAt,
+            phoneNo: user.phoneNo
         };
 
         return res.status(200).json({ status: "success", data: userData });
@@ -473,6 +473,81 @@ export const getUserDataById = async (req, res) => {
             message: "Failed to retrieve user data.",
             error,
         });
-     }
+    }
 }
+
+export const requestAccountClosure = async (req, res) => {
+    try {
+        const { accountNumber } = req.body;
+        const userId = req.userId; 
+
+        // Find the bank account by account number and userId
+        const userBank = await UserBank.findOne({ accountNumber, userId });
+
+        if (!userBank) {
+            return res.status(404).json({ status: 'warning', message: 'Bank account not found.' });
+        }
+
+        // Check if there is already a closure request
+        if (userBank.accountClosedRequest) {
+            return res.status(400).json({ status: 'warning', message: 'Account closure request already made.' });
+        }
+
+        // Update the account closure request status
+        userBank.accountClosedRequest = true;
+        userBank.accountClosedRequestDate = new Date(); // Track request date
+        userBank.status = 'Pending';
+
+        await userBank.save();
+
+        return res.status(200).json({
+            status: 'success',
+            message: 'Account closure request sent successfully.',
+            data: userBank
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ status: 'error', message: error.message || 'An error occurred while processing the request.' });
+    }
+};
+
+export const requestAccountReopening = async (req, res) => {
+    try {
+        const { accountNumber } = req.body;
+        const userId = req.userId;
+
+        // Find the bank account by account number and userId
+        const userBank = await UserBank.findOne({ accountNumber, userId });
+
+        if (!userBank) {
+            return res.status(404).json({ status: 'warning', message: 'Bank account not found.' });
+        }
+
+        // Check if the account is already open
+        if (!userBank.accountClosed) {
+            return res.status(400).json({ status: 'warning', message: 'Account is already open. Cannot reopen.' });
+        }
+
+        // Check if there is already a reopening request
+        if (userBank.accountReopenRequest) {
+            return res.status(400).json({ status: 'warning', message: 'Account reopening request already made.' });
+        }
+
+        // Update the account reopening request status
+        userBank.accountReopenRequest = true;
+        userBank.accountClosedRequestDate = new Date(); // Track request date
+        userBank.status = 'Pending';
+
+        await userBank.save();
+
+        return res.status(200).json({
+            status: 'success',
+            message: 'Account reopening request sent successfully.',
+            data: userBank
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ status: 'error', message: error.message || 'An error occurred while processing the request.' });
+    }
+};
 
