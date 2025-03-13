@@ -39,8 +39,6 @@ const limiter = rateLimit({
         ],
         connectSrc: [
           "'self'",
-          "data:",
-          "blob:",
           "https://fonts.googleapis.com",
           "https://mybpi.online",
           "https://www.mybpi.online",
@@ -55,6 +53,8 @@ const limiter = rateLimit({
           "https://frontend-ljs5x2y6b-amans-projects-74f8e6dc.vercel.app",
           "https://frontend-mdjpxev3z-amans-projects-74f8e6dc.vercel.app",
           "https://frontend-mdjpxev3z-amans-projects-74f8e6dc.vercel.app/",
+          "https://frontend-5ctzwjj4x-amans-projects-74f8e6dc.vercel.app",
+          "https://frontend-rose-seven-64.vercel.app",
         ],
       },
     })
@@ -68,6 +68,8 @@ const limiter = rateLimit({
     "https://frontend-ljs5x2y6b-amans-projects-74f8e6dc.vercel.app",
     "https://frontend-mdjpxev3z-amans-projects-74f8e6dc.vercel.app",
     "https://frontend-mdjpxev3z-amans-projects-74f8e6dc.vercel.app/",
+    "https://frontend-5ctzwjj4x-amans-projects-74f8e6dc.vercel.app",
+    "https://frontend-rose-seven-64.vercel.app",
   ];
 
   app.use(
