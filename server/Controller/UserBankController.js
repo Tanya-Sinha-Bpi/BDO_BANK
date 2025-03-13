@@ -60,6 +60,10 @@ export const createTransaction = async (req, res) => {
             return res.status(404).json({ status: "error", message: "Sender account not found." });
         }
 
+        if (senderAccount.accountClosed) {
+            return res.status(400).json({ status: "error", message: "Account is closed. You can not Initiate any Transaction" });
+        }
+
         let receiverAccount = null;
         let updatedSenderBalance = senderAccount.balance;
         let updatedReceiverBalance = null;
@@ -479,7 +483,7 @@ export const getUserDataById = async (req, res) => {
 export const requestAccountClosure = async (req, res) => {
     try {
         const { accountNumber } = req.body;
-        const userId = req.userId; 
+        const userId = req.userId;
 
         // Find the bank account by account number and userId
         const userBank = await UserBank.findOne({ accountNumber, userId });
@@ -550,4 +554,46 @@ export const requestAccountReopening = async (req, res) => {
         return res.status(500).json({ status: 'error', message: error.message || 'An error occurred while processing the request.' });
     }
 };
+
+export const updateProfileUser = async (req, res) => {
+    try {
+        const userId = req.userId;
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ status: 'error', message: 'User not found.' });
+        }
+        const { firstName, lastName, email, phoneNo, dateOfBirth } = req.body;
+        if (firstName) {
+            user.firstName = firstName;
+        }
+        if (lastName) {
+            user.lastName = lastName;
+        }
+        if (phoneNo) {
+            user.phoneNo = phoneNo;
+        }
+        if (email) {
+            user.email = email;
+        }
+        if (dateOfBirth) {
+            user.dateOfBirth = dateOfBirth;
+        }
+        await user.save();
+        return res.status(200).json({
+            status: 'success',
+            message: 'Profile updated successfully.',
+            data: {
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                phoneNo: user.phoneNo,
+                dateOfBirth: user.dateOfBirth
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ status: 'error', message: error.message || 'An error occurred while processing the request.' });
+    }
+}
 
