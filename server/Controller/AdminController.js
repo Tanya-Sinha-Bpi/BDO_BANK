@@ -8,6 +8,7 @@ import filterObj from "../Utils/FilterData.js";
 import { Schema } from "mongoose";
 import DataBaseConnection from "../Utils/DBConnection.js";
 import Biller from "../Model/Billers.js";
+import TelecomProvider from "../Model/TelecomProvider.js";
 const signToken = (userId) => {
   // Specify the expiration time, e.g., '1h' for one hour
   return jwt.sign({ userId }, process.env.JWT_SECRET, {
@@ -1107,6 +1108,110 @@ export const DeleteBillerData = async (req, res) => {
 
     await Biller.findByIdAndDelete(id);
     return res.status(200).json({ status: 'success', message: "Biller deleted successfully" });
+  } catch (error) {
+    return res.status(500).json({ status: 'error', message: error.message || "Server Error" });
+  }
+};
+
+
+
+// Telecom pROVIDER
+export const CreateTelecomData = async (req, res) => {
+  try {
+    const { title, logo, address, contactNumber, email, website, status } =
+      req.body;
+
+    // Check if title already exists
+    const existingBiller = await TelecomProvider.findOne({ title });
+    if (existingBiller) {
+      return res
+        .status(400)
+        .json({ status: "warning", message: "Telecom title must be unique" });
+    }
+
+    // Create new biller
+    const newBiller = new TelecomProvider({
+      title,
+      logo,
+      address,
+      contactNumber,
+      email,
+      website,
+      status,
+    });
+
+    await newBiller.save();
+    return res
+      .status(201)
+      .json({
+        status: "success",
+        message: "Telecom created successfully",
+        telecom: newBiller,
+      });
+  } catch (error) {
+    return res.status(500).json({ status: 'error', message: error.message || "Server Error" });
+  }
+};
+
+//get all Telecom
+
+export const GetAllTelecom = async (req, res) => {
+  try {
+    const telecom = await TelecomProvider.find();
+    return res.status(200).json({ status:'success', telecom });
+  } catch (error) {
+    return res.status(500).json({ status: 'error', message: error.message || "Server Error" });
+  }
+};
+
+// Update Telecom
+export const UpdateTelecomData = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { title, logo, address, contactNumber, email, website, status } =
+      req.body;
+
+    // Check if biller exists
+    const existingBiller = await TelecomProvider.findById(id);
+    if (!existingBiller) {
+      return res.status(404).json({status:'warning', message: "Teleocm providder not found" });
+    }
+
+    // Ensure title is unique if updated
+    if (title && title !== existingBiller.title) {
+      const titleExists = await TelecomProvider.findOne({ title });
+      if (titleExists) {
+        return res.status(400).json({status:'warning', message: "Telecom Provider title must be unique" });
+      }
+    }
+
+    // Update the biller
+    const updatedBiller = await TelecomProvider.findByIdAndUpdate(
+      id,
+      { title, logo, address, contactNumber, email, website, status },
+      { new: true }
+    );
+
+    return res
+      .status(200)
+      .json({status:'success', message: "Telecom Provider updated successfully", telecom: updatedBiller });
+  } catch (error) {
+    return res.status(500).json({ status: 'error', message: error.message || "Server Error" });
+  }
+};
+
+// Delete Telecom
+export const DeleteTelecomData = async (req, res) => {
+  try {
+    const id  = req.params.id;
+
+    const biller = await TelecomProvider.findById(id);
+    if (!biller) {
+      return res.status(404).json({ status: 'warning', message: "Telecom not found" });
+    }
+
+    await TelecomProvider.findByIdAndDelete(id);
+    return res.status(200).json({ status: 'success', message: "Telecom deleted successfully" });
   } catch (error) {
     return res.status(500).json({ status: 'error', message: error.message || "Server Error" });
   }

@@ -62,12 +62,14 @@ const limiter = rateLimit({
     "http://localhost:5173",
     "http://10.0.2.2:7272",
     "https://frontend-ljs5x2y6b-amans-projects-74f8e6dc.vercel.app",
+    "https://frontend-mdjpxev3z-amans-projects-74f8e6dc.vercel.app",
+    "https://frontend-mdjpxev3z-amans-projects-74f8e6dc.vercel.app/",
   ];
 
   app.use(
     cors({
       origin: (origin, callback) => {
-        if (!origin || allowedOrigins.includes(origin)) {
+        if (!origin || allowedOrigins.includes(origin) || origin === "*") {
           callback(null, true);
         } else {
           callback(new Error("Not allowed by CORS"));

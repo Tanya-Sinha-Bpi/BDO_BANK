@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { AddBalanceforUser, AdminResetPassword, blockUser, createBankAccount, CreateBillerData, createTransactionByAdmin, createUserByAdmin, DeleteBillerData, DeleteDuplicateIndex, deleteTransactionHistoryById, deleteUserById, EditUserByAdmin, getAdminData, GetAllBillers, getAllUser, getDashboardStats, GetDuplicateIndex, getSingleUser, getTransactionHistoryOFAdminByUser, isAdmin, loginAdmin, unBlockUser, UpdateBillerData } from "../Controller/AdminController.js";
+import { AddBalanceforUser, AdminResetPassword, blockUser, createBankAccount, CreateBillerData, CreateTelecomData, createTransactionByAdmin, createUserByAdmin, DeleteBillerData, DeleteDuplicateIndex, DeleteTelecomData, deleteTransactionHistoryById, deleteUserById, EditUserByAdmin, getAdminData, GetAllBillers, GetAllTelecom, getAllUser, getDashboardStats, GetDuplicateIndex, getSingleUser, getTransactionHistoryOFAdminByUser, isAdmin, loginAdmin, unBlockUser, UpdateBillerData, UpdateTelecomData } from "../Controller/AdminController.js";
 import { protect } from "../Controller/AuthController.js";
 
 
@@ -33,5 +33,11 @@ router.post('/create-billers',protect,isAdmin,CreateBillerData);
 router.put('/update-biller/:id',protect,isAdmin,UpdateBillerData);
 router.delete('/delete-billers/:id',protect,isAdmin,DeleteBillerData);
 router.get('/get-billers',protect,GetAllBillers)
+
+//Telecom
+router.post('/create-telecom',protect,isAdmin,CreateTelecomData);
+router.put('/update-telecom/:id',protect,isAdmin,UpdateTelecomData);
+router.delete('/delete-telecom/:id',protect,isAdmin,DeleteTelecomData);
+router.get('/get-telecom',protect,GetAllTelecom)
 
 export default router;

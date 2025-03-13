@@ -12,6 +12,7 @@ const initialState = {
   adminProfile: {},
   contactsByUser: {},
   billerData: [],
+  telecomData:[],
 };
 
 const dataSlice = createSlice({
@@ -46,12 +47,17 @@ const dataSlice = createSlice({
       state.adminProfile = {};
       state.error = false;
       state.isLoading = false;
+      state.billerData=[];
+      state.telecomData=[];
     },
     updateGetuserInfo: (state, action) => {
       state.contactsByUser = action.payload;
     },
     updateBillers: (state, action) => {
       state.billerData = action.payload;
+    },
+    updateTelecom: (state, action) => {
+      state.telecomData = action.payload;
     },
   },
 });
@@ -68,6 +74,7 @@ export const {
   resetDataState,
   updateGetuserInfo,
   updateBillers,
+  updateTelecom,
 } = dataSlice.actions;
 
 export function fetchTotalUsersList() {
@@ -494,6 +501,106 @@ export function UpdateBillerSlice(formData,id) {
         `admin/data/update-biller/${id}`,formData
       );
       const currentBillers = getState().adminStats.billerData;
+      const updatedBillers = currentBillers.map((biller) =>
+        biller._id === id ? { ...biller, ...formData } : biller
+      );
+      dispatch(updateBillers(updatedBillers));
+      dispatch(updateDataIsLoading({ isLoading: false, error: false }));
+    } catch (error) {
+      dispatch(updateBillers(currentBillers));
+      dispatch(updateDataIsLoading({ isLoading: false, error: true }));
+      const severity = error.response?.status || "error";
+      const message =
+        error.response?.data?.message || error.message || "Create failed";
+      dispatch(showSnackbar({ message, severity }));
+      return Promise.reject({ severity, message });
+    }
+  };
+}
+
+export function CreateTelecomSlice(formData) {
+  return async (dispatch) => {
+    dispatch(updateDataIsLoading({ isLoading: true, error: false }));
+    try {
+      const response = await axiosInstances.post(
+        "admin/data/create-telecom",
+        formData
+      );
+
+      dispatch(updateDataIsLoading({ isLoading: false, error: false }));
+
+      const message =
+        response.data?.message ||
+        response.data?.msg ||
+        "Data Fetched successful!";
+      const severity = response.data?.status || "success";
+      dispatch(showSnackbar({ message, severity }));
+      dispatch(GetAllTelecomSlice());
+    } catch (error) {
+      console.log("response error create telecom data", error);
+      dispatch(updateDataIsLoading({ isLoading: false, error: true }));
+      const severity = error.response?.status || "error";
+      const message =
+        error.response?.data?.message || error.message || "Create failed";
+      dispatch(showSnackbar({ message, severity }));
+      return Promise.reject({ severity, message });
+    }
+  };
+}
+
+export function GetAllTelecomSlice() {
+  return async (dispatch) => {
+    dispatch(updateDataIsLoading({ isLoading: true, error: false }));
+    try {
+      const response = await axiosInstances.get("admin/data/get-telecom");
+      // console.log("billers data fetch in slice fucntion", response.data);
+      dispatch(updateTelecom(response.data.telecom));
+      dispatch(updateDataIsLoading({ isLoading: false, error: false }));
+    } catch (error) {
+      // console.log("response error create biller data", error);
+      dispatch(updateDataIsLoading({ isLoading: false, error: true }));
+      const severity = error.response?.status || "error";
+      const message =
+        error.response?.data?.message || error.message || "Create failed";
+      dispatch(showSnackbar({ message, severity }));
+      return Promise.reject({ severity, message });
+    }
+  };
+}
+
+export function DeleteTelecomSlice(id) {
+  return async (dispatch, getState) => {
+    dispatch(updateDataIsLoading({ isLoading: true, error: false }));
+    try {
+      const response = await axiosInstances.delete(
+        `admin/data/delete-telecom/${id}`
+      );
+      const currentBillers = getState().adminStats.telecomData;
+      const updatedBillers = currentBillers.filter(
+        (biller) => biller._id !== id
+      );
+      dispatch(updateTelecom(updatedBillers));
+      dispatch(updateDataIsLoading({ isLoading: false, error: false }));
+    } catch (error) {
+      dispatch(updateTelecom(currentBillers));
+      dispatch(updateDataIsLoading({ isLoading: false, error: true }));
+      const severity = error.response?.status || "error";
+      const message =
+        error.response?.data?.message || error.message || "Create failed";
+      dispatch(showSnackbar({ message, severity }));
+      return Promise.reject({ severity, message });
+    }
+  };
+}
+
+export function UpdateTelecomSlice(formData,id) {
+  return async (dispatch, getState) => {
+    dispatch(updateDataIsLoading({ isLoading: true, error: false }));
+    try {
+      const response = await axiosInstances.put(
+        `admin/data/update-telecom/${id}`,formData
+      );
+      const currentBillers = getState().adminStats.telecomData;
       const updatedBillers = currentBillers.map((biller) =>
         biller._id === id ? { ...biller, ...formData } : biller
       );

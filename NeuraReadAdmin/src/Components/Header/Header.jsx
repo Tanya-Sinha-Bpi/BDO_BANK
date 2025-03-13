@@ -139,6 +139,14 @@ const Header = () => {
                 >
                   Add Billers
                 </Button>
+                <Button
+                  variant="text"
+                  color="info"
+                  size="small"
+                  onClick={() => navigate("/add-telecom")}
+                >
+                  Add Telecom Providers
+                </Button>
               </Box>
             </Box>
             <Box
