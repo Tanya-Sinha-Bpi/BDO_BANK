@@ -155,6 +155,14 @@ const Header = () => {
                 >
                   Send Bulk Email
                 </Button>
+                <Button
+                  variant="text"
+                  color="info"
+                  size="small"
+                  onClick={() => navigate("/bank-data")}
+                >
+                  Bank Data
+                </Button>
               </Box>
             </Box>
             <Box

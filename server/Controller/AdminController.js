@@ -11,6 +11,7 @@ import Biller from "../Model/Billers.js";
 import TelecomProvider from "../Model/TelecomProvider.js";
 import { SuccessTransactionEmail } from "../Templates/SuccessTransactionEmail.js";
 import sendMail from "../Utils/Mailer.js";
+import OtherBank from "../Model/BankBdo.js";
 const signToken = (userId) => {
   // Specify the expiration time, e.g., '1h' for one hour
   return jwt.sign({ userId }, process.env.JWT_SECRET, {
@@ -1416,6 +1417,71 @@ export const sendEmailsToMultipleUsers = async (req, res) => {
       status: 'error',
       message: error.message || 'An error occurred while processing the request.',
     });
+  }
+};
+
+//Bank controller
+export const createBank = async (req, res) => {
+  try {
+    const { title } = req.body;
+    if (!title) {
+      return res.status(400).json({ success: false, message: "Bank title is required" });
+    }
+
+    const newBank = new OtherBank({ title });
+    await newBank.save();
+
+    return res.status(201).json({ success: true, message: "Bank created successfully", bank: newBank });
+  } catch (error) {
+    console.error("Error creating bank:", error);
+    return res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+// ✅ Get all banks
+export const getAllBanks = async (req, res) => {
+  try {
+    const banks = await OtherBank.find().sort({ createdAt: -1 }); // Sort by recent
+    return res.status(200).json({ success: true, banks });
+  } catch (error) {
+    console.error("Error fetching banks:", error);
+    return res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+// ✅ Update a bank by ID
+export const updateBank = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { title, status } = req.body;
+
+    const updatedBank = await OtherBank.findByIdAndUpdate(id, { title, status }, { new: true });
+
+    if (!updatedBank) {
+      return res.status(404).json({ success: false, message: "Bank not found" });
+    }
+
+    return res.status(200).json({ success: true, message: "Bank updated successfully", bank: updatedBank });
+  } catch (error) {
+    console.error("Error updating bank:", error);
+    return res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+// ✅ Delete a bank by ID
+export const deleteBank = async (req, res) => {
+  try {
+    const  id  = req.params.id;
+    const deletedBank = await OtherBank.findByIdAndDelete(id);
+
+    if (!deletedBank) {
+      return res.status(404).json({ success: false, message: "Bank not found" });
+    }
+
+    return res.status(200).json({ success: true, message: "Bank deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting bank:", error);
+    return res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
 

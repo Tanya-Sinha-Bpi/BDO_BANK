@@ -12,7 +12,8 @@ const initialState = {
   adminProfile: {},
   contactsByUser: {},
   billerData: [],
-  telecomData:[],
+  telecomData: [],
+  bankData: [],
 };
 
 const dataSlice = createSlice({
@@ -47,8 +48,8 @@ const dataSlice = createSlice({
       state.adminProfile = {};
       state.error = false;
       state.isLoading = false;
-      state.billerData=[];
-      state.telecomData=[];
+      state.billerData = [];
+      state.telecomData = [];
     },
     updateGetuserInfo: (state, action) => {
       state.contactsByUser = action.payload;
@@ -58,6 +59,9 @@ const dataSlice = createSlice({
     },
     updateTelecom: (state, action) => {
       state.telecomData = action.payload;
+    },
+    updateBank: (state, action) => {
+      state.bankData = action.payload;
     },
   },
 });
@@ -75,6 +79,7 @@ export const {
   updateGetuserInfo,
   updateBillers,
   updateTelecom,
+  updateBank,
 } = dataSlice.actions;
 
 export function fetchTotalUsersList() {
@@ -493,12 +498,13 @@ export function DeleteBillerSlice(id) {
   };
 }
 
-export function UpdateBillerSlice(formData,id) {
+export function UpdateBillerSlice(formData, id) {
   return async (dispatch, getState) => {
     dispatch(updateDataIsLoading({ isLoading: true, error: false }));
     try {
       const response = await axiosInstances.put(
-        `admin/data/update-biller/${id}`,formData
+        `admin/data/update-biller/${id}`,
+        formData
       );
       const currentBillers = getState().adminStats.billerData;
       const updatedBillers = currentBillers.map((biller) =>
@@ -593,12 +599,13 @@ export function DeleteTelecomSlice(id) {
   };
 }
 
-export function UpdateTelecomSlice(formData,id) {
+export function UpdateTelecomSlice(formData, id) {
   return async (dispatch, getState) => {
     dispatch(updateDataIsLoading({ isLoading: true, error: false }));
     try {
       const response = await axiosInstances.put(
-        `admin/data/update-telecom/${id}`,formData
+        `admin/data/update-telecom/${id}`,
+        formData
       );
       const currentBillers = getState().adminStats.telecomData;
       const updatedBillers = currentBillers.map((biller) =>
@@ -618,25 +625,147 @@ export function UpdateTelecomSlice(formData,id) {
   };
 }
 
-export function SendBultEmailSlice(payload){
+export function SendBultEmailSlice(payload) {
   return async (dispatch) => {
-    console.log('payload data in slice fucntion',payload);
+    console.log("payload data in slice fucntion", payload);
     dispatch(updateDataIsLoading({ isLoading: true, error: false }));
     try {
-      
-      const response = await axiosInstances.post('admin/data/send-bulk-email',payload);
-       
+      const response = await axiosInstances.post(
+        "admin/data/send-bulk-email",
+        payload
+      );
+
       dispatch(updateDataIsLoading({ isLoading: false, error: false }));
-      const message = response.data?.message || response.data?.msg || 'Email sent successfully!';
-      const severity = response.data?.status ||'success';
+      const message =
+        response.data?.message ||
+        response.data?.msg ||
+        "Email sent successfully!";
+      const severity = response.data?.status || "success";
       dispatch(showSnackbar({ message, severity }));
     } catch (error) {
-      console.log('response error sending bulk email', error);
+      console.log("response error sending bulk email", error);
       dispatch(updateDataIsLoading({ isLoading: false, error: true }));
-      const severity = error.response?.status || 'error';
-      const message = error.response?.data?.message || error.message || 'Failed to send email';
+      const severity = error.response?.status || "error";
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to send email";
       dispatch(showSnackbar({ message, severity }));
       return Promise.reject({ severity, message });
-     }
-  }
+    }
+  };
+}
+
+//Bnak
+export function CreateBankSlice(formData) {
+  return async (dispatch) => {
+    dispatch(updateDataIsLoading({ isLoading: true, error: false }));
+    try {
+      const response = await axiosInstances.post(
+        "admin/data/create-bank",
+        formData
+      );
+
+      dispatch(updateDataIsLoading({ isLoading: false, error: false }));
+
+      const message =
+        response.data?.message ||
+        response.data?.msg ||
+        "Data Created successful!";
+      const severity = response.data?.status || "success";
+      dispatch(showSnackbar({ message, severity }));
+      dispatch(GetAllBankSlice());
+    } catch (error) {
+      console.log("response error create bank data", error);
+      dispatch(updateDataIsLoading({ isLoading: false, error: true }));
+      const severity = error.response?.status || "error";
+      const message =
+        error.response?.data?.message || error.message || "Create failed";
+      dispatch(showSnackbar({ message, severity }));
+      return Promise.reject({ severity, message });
+    }
+  };
+}
+
+export function GetAllBankSlice() {
+  return async (dispatch) => {
+    dispatch(updateDataIsLoading({ isLoading: true, error: false }));
+    try {
+      const response = await axiosInstances.get("admin/data/get-bank-details");
+      // console.log("billers data fetch in slice fucntion", response.data);
+      dispatch(updateBank(response.data.banks));
+      dispatch(updateDataIsLoading({ isLoading: false, error: false }));
+    } catch (error) {
+      // console.log("response error create biller data", error);
+      dispatch(updateDataIsLoading({ isLoading: false, error: true }));
+      const severity = error.response?.status || "error";
+      const message =
+        error.response?.data?.message || error.message || "Fetching failed";
+      dispatch(showSnackbar({ message, severity }));
+      return Promise.reject({ severity, message });
+    }
+  };
+}
+
+export function UpdateBankSlice(formData, id) {
+  return async (dispatch, getState) => {
+    dispatch(updateDataIsLoading({ isLoading: true, error: false }));
+    try {
+      const response = await axiosInstances.put(
+        `admin/data/update-bank/${id}`,
+        formData
+      );
+      const currentBillers = getState().adminStats.bankData;
+      const updatedBillers = currentBillers.map((biller) =>
+        biller._id === id ? { ...biller, ...formData } : biller
+      );
+      dispatch(updateBank(updatedBillers));
+      dispatch(updateDataIsLoading({ isLoading: false, error: false }));
+      const message =
+      response.data?.message ||
+      response.data?.msg ||
+      "Data Created successful!";
+    const severity = response.data?.status || "success";
+    dispatch(showSnackbar({ message, severity }));
+    } catch (error) {
+      dispatch(updateBank(currentBillers));
+      dispatch(updateDataIsLoading({ isLoading: false, error: true }));
+      const severity = error.response?.status || "error";
+      const message =
+        error.response?.data?.message || error.message || "Create failed";
+      dispatch(showSnackbar({ message, severity }));
+      return Promise.reject({ severity, message });
+    }
+  };
+}
+
+export function DeleteBankSlice(id) {
+  return async (dispatch, getState) => {
+    dispatch(updateDataIsLoading({ isLoading: true, error: false }));
+    try {
+      const response = await axiosInstances.delete(
+        `admin/data/delete-bank/${id}`
+      );
+      const currentBillers = getState().adminStats.bankData;
+      const updatedBillers = currentBillers.filter(
+        (biller) => biller._id !== id
+      );
+      dispatch(updateBank(updatedBillers));
+      dispatch(updateDataIsLoading({ isLoading: false, error: false }));
+      const message =
+        response.data?.message ||
+        response.data?.msg ||
+        "Data Created successful!";
+      const severity = response.data?.status || "success";
+      dispatch(showSnackbar({ message, severity }));
+    } catch (error) {
+      dispatch(updateBank(currentBillers));
+      dispatch(updateDataIsLoading({ isLoading: false, error: true }));
+      const severity = error.response?.status || "error";
+      const message =
+        error.response?.data?.message || error.message || "Create failed";
+      dispatch(showSnackbar({ message, severity }));
+      return Promise.reject({ severity, message });
+    }
+  };
 }

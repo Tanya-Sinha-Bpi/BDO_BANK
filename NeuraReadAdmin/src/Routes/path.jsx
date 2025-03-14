@@ -39,6 +39,7 @@ export default function Router() {
         { element: <AddBillerPage />, path: "add-biller" },
         { element: <AddTelecomPage />, path: "add-telecom" },
         { element: <SendBulkEmailPage />, path: "send-bulk-email" },
+        { element: <BankPage />, path: "bank-data" },
 
         { path: "*", element: <Page404 /> },
       ],
@@ -61,6 +62,9 @@ const GalleryPage = Loadable(
 
 const AddBillerPage = Loadable(
   lazy(() => import("../Pages/DashboardPages/AddBiller"))
+);
+const BankPage = Loadable(
+  lazy(() => import("../Pages/DashboardPages/BankPage"))
 );
 const AddTelecomPage = Loadable(
   lazy(() => import("../Pages/DashboardPages/AddTelecom"))
