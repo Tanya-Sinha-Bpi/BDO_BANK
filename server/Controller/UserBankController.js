@@ -401,7 +401,7 @@ export const getTransactionHistory = async (req, res) => {
                 path: 'fromAccount',
                 select: 'accountNumber accountName',
                 model: UserBank
-            });
+            }).sort({ transactionDate: -1 });;
 
         // Process transactions to handle `toAccount` properly
         const transactionsWithReceiver = sentTransactions.map(tx => {
