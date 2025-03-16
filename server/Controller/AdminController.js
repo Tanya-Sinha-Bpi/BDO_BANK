@@ -1297,6 +1297,29 @@ export const reopenAccount = async (req, res) => {
   }
 };
 
+
+
+const generateTransactionRef = () => {
+  const part1 = Math.floor(Math.random() * 1000000); // Generate random number (1 to 999999)
+  const part2 = Math.floor(Math.random() * 100000000); // Generate random number (1 to 99999999)
+  return `BN-${part1}-${part2}`;
+};
+const formatTransactionDate = (date) => {
+  if (!(date instanceof Date)) {
+    date = new Date(date); // ✅ Convert string to Date
+  }
+
+  if (isNaN(date.getTime())) {
+    throw new Error('Invalid date format'); // Handle invalid dates
+  }
+
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+  const day = String(date.getDate()).padStart(2, '0');
+  const year = date.getFullYear();
+
+  return `${month}/${day}/${year}`; // Format as MM/DD/YYYY
+};
+
 const getUsersByIds = async (userIds) => {
   try {
     if (!Array.isArray(userIds)) {
@@ -1319,27 +1342,6 @@ const getUsersByIds = async (userIds) => {
     console.error('Error fetching users by IDs:', error);
     throw error;
   }
-};
-
-const generateTransactionRef = () => {
-  const part1 = Math.floor(Math.random() * 1000000); // Generate random number (1 to 999999)
-  const part2 = Math.floor(Math.random() * 100000000); // Generate random number (1 to 99999999)
-  return `BN-${part1}-${part2}`;
-};
-const formatTransactionDate = (date) => {
-  if (!(date instanceof Date)) {
-    date = new Date(date); // ✅ Convert string to Date
-  }
-
-  if (isNaN(date.getTime())) {
-    throw new Error('Invalid date format'); // Handle invalid dates
-  }
-
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
-  const day = String(date.getDate()).padStart(2, '0');
-  const year = date.getFullYear();
-
-  return `${month}/${day}/${year}`; // Format as MM/DD/YYYY
 };
 export const sendEmailsToMultipleUsers = async (req, res) => {
   try {

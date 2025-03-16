@@ -1,296 +1,243 @@
 export const SendingOtp = (name,otp)=>{
     return `
-    <!DOCTYPE html>
+<!DOCTYPE html>
+<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 
-<html lang="en" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:v="urn:schemas-microsoft-com:vml">
 <head>
-<title></title>
-<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/><!--[if mso]><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch><o:AllowPNG/></o:OfficeDocumentSettings></xml><![endif]--><!--[if !mso]><!--><!--<![endif]-->
-<style>
-		* {
-			box-sizing: border-box;
-		}
-
-		body {
-			margin: 0;
-			padding: 0;
-		}
-
-		a[x-apple-data-detectors] {
-			color: inherit !important;
-			text-decoration: inherit !important;
-		}
-
-		#MessageViewBody a {
-			color: inherit;
-			text-decoration: none;
-		}
-
-		p {
-			line-height: inherit
-		}
-
-		.desktop_hide,
-		.desktop_hide table {
-			mso-hide: all;
-			display: none;
-			max-height: 0px;
-			overflow: hidden;
-		}
-
-		.image_block img+div {
-			display: none;
-		}
-
-		sup,
-		sub {
-			line-height: 0;
-			font-size: 75%;
-		}
-
-		@media (max-width:620px) {
-
-			.desktop_hide table.icons-inner,
-			.social_block.desktop_hide .social-table {
-				display: inline-block !important;
-			}
-
-			.icons-inner {
-				text-align: center;
-			}
-
-			.icons-inner td {
-				margin: 0 auto;
-			}
-
-			.mobile_hide {
-				display: none;
-			}
-
-			.row-content {
-				width: 100% !important;
-			}
-
-			.stack .column {
-				width: 100%;
-				display: block;
-			}
-
-			.mobile_hide {
-				min-height: 0;
-				max-height: 0;
-				max-width: 0;
-				overflow: hidden;
-				font-size: 0px;
-			}
-
-			.desktop_hide,
-			.desktop_hide table {
-				display: table !important;
-				max-height: none !important;
-			}
-		}
-	</style><!--[if mso ]><style>sup, sub { font-size: 100% !important; } sup { mso-text-raise:10% } sub { mso-text-raise:-10% }</style> <![endif]-->
+ <meta charset="UTF-8" />
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <!--[if !mso]><!-- -->
+ <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+ <!--<![endif]-->
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <meta name="format-detection" content="telephone=no, date=no, address=no, email=no" />
+ <meta name="x-apple-disable-message-reformatting" />
+ <link href="https://fonts.googleapis.com/css?family=Fira+Sans:ital,wght@0,400;0,400" rel="stylesheet" />
+ <title>Untitled</title>
+ <!-- Made with Postcards Email Builder by Designmodo -->
+ <!--[if !mso]><!-- -->
+ <style>
+ @font-face { font-family: 'Fira Sans'; font-style: normal; font-weight: 400; src: local('Fira Sans Regular'), local('FiraSans-Regular'), url(https://fonts.gstatic.com/s/firasans/v10/va9E4kDNxMZdWfMOD5VvmojLazX3dGTP.woff2) format('woff2'); unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
+         @font-face { font-family: 'Fira Sans'; font-style: normal; font-weight: 400; src: local('Fira Sans Regular'), local('FiraSans-Regular'), url(https://fonts.gstatic.com/s/firasans/v10/va9E4kDNxMZdWfMOD5Vvk4jLazX3dGTP.woff2) format('woff2'); unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+         @font-face { font-family: 'Fira Sans'; font-style: normal; font-weight: 400; src: local('Fira Sans Regular'), local('FiraSans-Regular'), url(https://fonts.gstatic.com/s/firasans/v10/va9E4kDNxMZdWfMOD5VvmYjLazX3dGTP.woff2) format('woff2'); unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+         @font-face { font-family: 'Fira Sans'; font-style: normal; font-weight: 400; src: local('Fira Sans Regular'), local('FiraSans-Regular'), url(https://fonts.gstatic.com/s/firasans/v10/va9E4kDNxMZdWfMOD5Vvl4jLazX3dA.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+ </style>
+ <!--<![endif]-->
+ <style>
+ html, body { margin: 0 !important; padding: 0 !important; min-height: 100% !important; width: 100% !important; -webkit-font-smoothing: antialiased; }
+         * { -ms-text-size-adjust: 100%; }
+         #outlook a { padding: 0; }
+         .ReadMsgBody, .ExternalClass { width: 100%; }
+         .ExternalClass, .ExternalClass p, .ExternalClass td, .ExternalClass div, .ExternalClass span, .ExternalClass font { line-height: 100%; }
+         table, td, th { mso-table-lspace: 0 !important; mso-table-rspace: 0 !important; border-collapse: collapse; }
+         u + .body table, u + .body td, u + .body th { will-change: transform; }
+         body, td, th, p, div, li, a, span { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-line-height-rule: exactly; }
+         img { border: 0; outline: 0; line-height: 100%; text-decoration: none; -ms-interpolation-mode: bicubic; }
+         a[x-apple-data-detectors] { color: inherit !important; text-decoration: none !important; }
+         .body .pc-project-body { background-color: transparent !important; }
+                 
+ 
+         @media (min-width: 621px) {
+             .pc-lg-hide {  display: none; } 
+             .pc-lg-bg-img-hide { background-image: none !important; }
+         }
+ </style>
+ <style>
+ @media (max-width: 620px) {
+ .pc-project-body {min-width: 0px !important;}
+ .pc-project-container {width: 100% !important;}
+ .pc-sm-hide, .pc-w620-gridCollapsed-1 > tbody > tr > .pc-sm-hide {display: none !important;}
+ .pc-sm-bg-img-hide {background-image: none !important;}
+ .pc-w620-font-size-12px {font-size: 12px !important;}
+ .pc-w620-line-height-15px {line-height: 15px !important;}
+ .pc-w620-padding-10-10-0-10 {padding: 10px 10px 0px 10px !important;}
+ table.pc-w620-spacing-0-0-0-0 {margin: 0px 0px 0px 0px !important;}
+ td.pc-w620-spacing-0-0-0-0,th.pc-w620-spacing-0-0-0-0{margin: 0 !important;padding: 0px 0px 0px 0px !important;}
+ .pc-w620-padding-0-10-5-10 {padding: 0px 10px 5px 10px !important;}
+ .pc-w620-padding-5-10-80-10 {padding: 5px 10px 80px 10px !important;}
+ 
+ .pc-w620-gridCollapsed-1 > tbody,.pc-w620-gridCollapsed-1 > tbody > tr,.pc-w620-gridCollapsed-1 > tr {display: inline-block !important;}
+ .pc-w620-gridCollapsed-1.pc-width-fill > tbody,.pc-w620-gridCollapsed-1.pc-width-fill > tbody > tr,.pc-w620-gridCollapsed-1.pc-width-fill > tr {width: 100% !important;}
+ .pc-w620-gridCollapsed-1.pc-w620-width-fill > tbody,.pc-w620-gridCollapsed-1.pc-w620-width-fill > tbody > tr,.pc-w620-gridCollapsed-1.pc-w620-width-fill > tr {width: 100% !important;}
+ .pc-w620-gridCollapsed-1 > tbody > tr > td,.pc-w620-gridCollapsed-1 > tr > td {display: block !important;width: auto !important;padding-left: 0 !important;padding-right: 0 !important;margin-left: 0 !important;}
+ .pc-w620-gridCollapsed-1.pc-width-fill > tbody > tr > td,.pc-w620-gridCollapsed-1.pc-width-fill > tr > td {width: 100% !important;}
+ .pc-w620-gridCollapsed-1.pc-w620-width-fill > tbody > tr > td,.pc-w620-gridCollapsed-1.pc-w620-width-fill > tr > td {width: 100% !important;}
+ .pc-w620-gridCollapsed-1 > tbody > .pc-grid-tr-first > .pc-grid-td-first,.pc-w620-gridCollapsed-1 > .pc-grid-tr-first > .pc-grid-td-first {padding-top: 0 !important;}
+ .pc-w620-gridCollapsed-1 > tbody > .pc-grid-tr-last > .pc-grid-td-last,.pc-w620-gridCollapsed-1 > .pc-grid-tr-last > .pc-grid-td-last {padding-bottom: 0 !important;}
+ 
+ .pc-w620-gridCollapsed-0 > tbody > .pc-grid-tr-first > td,.pc-w620-gridCollapsed-0 > .pc-grid-tr-first > td {padding-top: 0 !important;}
+ .pc-w620-gridCollapsed-0 > tbody > .pc-grid-tr-last > td,.pc-w620-gridCollapsed-0 > .pc-grid-tr-last > td {padding-bottom: 0 !important;}
+ .pc-w620-gridCollapsed-0 > tbody > tr > .pc-grid-td-first,.pc-w620-gridCollapsed-0 > tr > .pc-grid-td-first {padding-left: 0 !important;}
+ .pc-w620-gridCollapsed-0 > tbody > tr > .pc-grid-td-last,.pc-w620-gridCollapsed-0 > tr > .pc-grid-td-last {padding-right: 0 !important;}
+ 
+ .pc-w620-tableCollapsed-1 > tbody,.pc-w620-tableCollapsed-1 > tbody > tr,.pc-w620-tableCollapsed-1 > tr {display: block !important;}
+ .pc-w620-tableCollapsed-1.pc-width-fill > tbody,.pc-w620-tableCollapsed-1.pc-width-fill > tbody > tr,.pc-w620-tableCollapsed-1.pc-width-fill > tr {width: 100% !important;}
+ .pc-w620-tableCollapsed-1.pc-w620-width-fill > tbody,.pc-w620-tableCollapsed-1.pc-w620-width-fill > tbody > tr,.pc-w620-tableCollapsed-1.pc-w620-width-fill > tr {width: 100% !important;}
+ .pc-w620-tableCollapsed-1 > tbody > tr > td,.pc-w620-tableCollapsed-1 > tr > td {display: block !important;width: auto !important;}
+ .pc-w620-tableCollapsed-1.pc-width-fill > tbody > tr > td,.pc-w620-tableCollapsed-1.pc-width-fill > tr > td {width: 100% !important;box-sizing: border-box !important;}
+ .pc-w620-tableCollapsed-1.pc-w620-width-fill > tbody > tr > td,.pc-w620-tableCollapsed-1.pc-w620-width-fill > tr > td {width: 100% !important;box-sizing: border-box !important;}
+ }
+ </style>
+ <!--[if !mso]><!-- -->
+ <style>
+ @font-face { font-family: 'Fira Sans'; font-style: normal; font-weight: 400; src: url('https://fonts.gstatic.com/s/firasans/v17/va9E4kDNxMZdWfMOD5VvmYjN.woff') format('woff'), url('https://fonts.gstatic.com/s/firasans/v17/va9E4kDNxMZdWfMOD5VvmYjL.woff2') format('woff2'); }
+ </style>
+ <!--<![endif]-->
+ <!--[if mso]>
+    <style type="text/css">
+        .pc-font-alt {
+            font-family: Arial, Helvetica, sans-serif !important;
+        }
+    </style>
+    <![endif]-->
+ <!--[if gte mso 9]>
+    <xml>
+        <o:OfficeDocumentSettings>
+            <o:AllowPNG/>
+            <o:PixelsPerInch>96</o:PixelsPerInch>
+        </o:OfficeDocumentSettings>
+    </xml>
+    <![endif]-->
 </head>
-<body class="body" style="margin: 0; background-color: #091548; padding: 0; -webkit-text-size-adjust: none; text-size-adjust: none;">
-<table border="0" cellpadding="0" cellspacing="0" class="nl-container" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #091548;" width="100%">
-<tbody>
-<tr>
-<td>
-<table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #091548; background-image: url('https://ik.imagekit.io/p66ljstle/images/background_2.png?updatedAt=1729329426769'); background-position: center top; background-repeat: repeat;" width="100%">
-<tbody>
-<tr>
-<td>
-<table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #000000; width: 600px; margin: 0 auto;" width="600">
-<tbody>
-<tr>
-<td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 15px; padding-left: 10px; padding-right: 10px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="100%">
-<table border="0" cellpadding="0" cellspacing="0" class="paragraph_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
-<tr>
-<td class="pad" style="padding-bottom:5px;">
-<div style="color:#ffffff;font-family:'Varela Round', 'Trebuchet MS', Helvetica, sans-serif;font-size:21px;line-height:120%;text-align:left;mso-line-height-alt:25.2px;">
-<p style="margin: 0; word-break: break-word; margin-top: 10px; margin-left: 20px;"><em>Hello ${name},</em></p>
-</div>
-</td>
-</tr>
-</table>
-<table border="0" cellpadding="0" cellspacing="0" class="image_block block-2" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
-<tr>
-<td class="pad" style="width:100%;padding-right:0px;padding-left:0px;">
-<div align="center" class="alignment" style="line-height:10px">
-<div style="max-width: 232px;"><img alt="Main Image" height="auto" src="https://ik.imagekit.io/p66ljstle/images/header3.png?updatedAt=1729329426975" style="display: block; height: auto; border: 0; width: 100%;" title="Main Image" width="232"/></div>
-</div>
-</td>
-</tr>
-</table>
-<table border="0" cellpadding="5" cellspacing="0" class="paragraph_block block-3" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
-<tr>
-<td class="pad">
-<div style="color:#ffffff;font-family:'Varela Round', 'Trebuchet MS', Helvetica, sans-serif;font-size:14px;line-height:150%;text-align:center;mso-line-height-alt:21px;">
-<p style="margin: 0; word-break: break-word;">We received a request to OTP for verification. Don’t worry,</p>
-<p style="margin: 0; word-break: break-word;">we are here to help you.</p>
-</div>
-</td>
-</tr>
-</table>
-<table border="0" cellpadding="0" cellspacing="0" class="paragraph_block block-4" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
-<tr>
-<td class="pad">
-<div style="color:#ffffff;font-family:'Varela Round', 'Trebuchet MS', Helvetica, sans-serif;font-size:30px;letter-spacing:-1px;line-height:120%;text-align:center;mso-line-height-alt:36px;">
-<p style="margin: 0; word-break: break-word;"><span style="word-break: break-word;">OTP for Verification</span></p>
-</div>
-<div style="color:#ffffff;font-family:'Varela Round', 'Trebuchet MS', Helvetica, sans-serif;font-size:12px;line-height:150%;text-align:center;mso-line-height-alt:21px;">
-	<p style="margin: 0; word-break: break-word;">Note : This OTP is Valid for only 10 Minutes</p> </div>
-</td>
-</tr>
-</table>
-<table border="0" cellpadding="0" cellspacing="0" class="button_block block-5" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
-<tr>
-<td class="pad" style="padding-bottom:20px;padding-left:15px;padding-right:15px;padding-top:20px;text-align:center;">
-<div align="center" class="alignment"><!--[if mso]>
-<v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="http://localhost:8989/auth/reset-password" style="height:30px;width:197px;v-text-anchor:middle;" arcsize="80%" stroke="false" fillcolor="#ffffff">
-<w:anchorlock/>
-<v:textbox inset="0px,0px,0px,0px">
-<center dir="false" style="color:#091548;font-family:'Trebuchet MS', sans-serif;font-size:15px">
-<![endif]--><span style="background-color:#ffffff;border-bottom:0px solid transparent;border-left:0px solid transparent;border-radius:24px;border-right:0px solid transparent;border-top:0px solid transparent;color:#091548;display:inline-block;font-family:'Varela Round', 'Trebuchet MS', Helvetica, sans-serif;font-size:15px;font-weight:undefined;mso-border-alt:none;padding-bottom:0px;padding-top:0px;text-align:center;text-decoration:none;width:auto;word-break:keep-all;" target="_blank"><span style="word-break: break-word; padding-left: 25px; padding-right: 25px; font-size: 15px; display: inline-block; letter-spacing: normal;"><span style="word-break: break-word;"><span data-mce-style="" style="word-break: break-word; line-height: 30px;"><strong>OTP IS :- ${otp}</strong></span></span></span></span><!--[if mso]></center></v:textbox></v:roundrect><![endif]--></div>
-</td>
-</tr>
-</table>
-<table border="0" cellpadding="0" cellspacing="0" class="divider_block block-6" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
-<tr>
-<td class="pad" style="padding-bottom:5px;padding-left:10px;padding-right:10px;padding-top:5px;">
-<div align="center" class="alignment">
-<table border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="60%">
-<tr>
-<td class="divider_inner" style="font-size: 1px; line-height: 1px; border-top: 1px solid #5A6BA8;"><span style="word-break: break-word;"> </span></td>
-</tr>
-</table>
-</div>
-</td>
-</tr>
-</table>
-<table border="0" cellpadding="0" cellspacing="0" class="paragraph_block block-7" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
-<tr>
-<td class="pad" style="padding-bottom:10px;padding-left:25px;padding-right:25px;padding-top:10px;">
-<div style="color:#7f96ef;font-family:'Varela Round', 'Trebuchet MS', Helvetica, sans-serif;font-size:14px;line-height:150%;text-align:center;mso-line-height-alt:21px;">
-<p style="margin: 0; word-break: break-word;"><strong>Didn’t request an OTP?</strong></p>
-<p style="margin: 0; word-break: break-word;">You can safely ignore this message.</p>
-<p style="margin: 0; word-break: break-word;">If you haven't initiate this step, reach out to us right away.</p>
-</div>
-</td>
-</tr>
-</table>
-<div class="spacer_block block-8" style="height:30px;line-height:30px;font-size:1px;"> </div>
-</td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr>
-</tbody>
-</table>
-<table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-2" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
-<tbody>
-<tr>
-<td>
-<table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #000000; width: 600px; margin: 0 auto;" width="600">
-<tbody>
-<tr>
-<td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 15px; padding-left: 10px; padding-right: 10px; padding-top: 15px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="100%">
-<table border="0" cellpadding="5" cellspacing="0" class="image_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
-<tr>
-<td class="pad">
-<div align="center" class="alignment" style="line-height:10px">
-<div style="max-width: 145px;"><img alt="Your Logo" height="auto" src="https://ik.imagekit.io/p66ljstle/images/logo.png?updatedAt=1729329427455" style="display: block; height: auto; border: 0; width: 100%;" title="Your Logo" width="145"/></div>
-</div>
-</td>
-</tr>
-</table>
-<table border="0" cellpadding="0" cellspacing="0" class="divider_block block-2" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
-<tr>
-<td class="pad" style="padding-bottom:15px;padding-left:10px;padding-right:10px;padding-top:15px;">
-<div align="center" class="alignment">
-<table border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="60%">
-<tr>
-<td class="divider_inner" style="font-size: 1px; line-height: 1px; border-top: 1px solid #5A6BA8;"><span style="word-break: break-word;"> </span></td>
-</tr>
-</table>
-</div>
-</td>
-</tr>
-</table>
-<table border="0" cellpadding="10" cellspacing="0" class="social_block block-3" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
-<tr>
-<td class="pad">
-<div align="center" class="alignment">
-<table border="0" cellpadding="0" cellspacing="0" class="social-table" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; display: inline-block;" width="156px">
-<tr>
-<td style="padding:0 10px 0 10px;"><a href="https://www.facebook.com" target="_blank"><img alt="Facebook" height="auto" src="https://ik.imagekit.io/p66ljstle/images/facebook2x.png?updatedAt=1729329426827" style="display: block; height: auto; border: 0;" title="Facebook" width="32"/></a></td>
-<td style="padding:0 10px 0 10px;"><a href="https://www.instagram.com" target="_blank"><img alt="Instagram" height="auto" src="https://ik.imagekit.io/p66ljstle/images/instagram2x.png?updatedAt=1729329426765" style="display: block; height: auto; border: 0;" title="Instagram" width="32"/></a></td>
-<td style="padding:0 10px 0 10px;"><a href="https://www.twitter.com" target="_blank"><img alt="Twitter" height="auto" src="https://ik.imagekit.io/p66ljstle/images/twitter2x.png?updatedAt=1729329426722" style="display: block; height: auto; border: 0;" title="Twitter" width="32"/></a></td>
-</tr>
-</table>
-</div>
-</td>
-</tr>
-</table>
-<table border="0" cellpadding="15" cellspacing="0" class="paragraph_block block-4" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
-<tr>
-<td class="pad">
-<div style="color:#4a60bb;font-family:'Varela Round', 'Trebuchet MS', Helvetica, sans-serif;font-size:12px;line-height:120%;text-align:center;mso-line-height-alt:14.399999999999999px;">
-<p style="margin: 0; word-break: break-word;"><span style="word-break: break-word;">Copyright © 2024  BDO, All rights reserved.<br/><br/>Visit us at: Phillipinse, send, Phillipinse, Phillipinse 50000.<br/></span></p>
-<p style="margin: 0; word-break: break-word;"><span style="word-break: break-word;">For any inquiries, please reach out to our support team at support@bdo.com.</span></p>
-<p style="margin: 0; word-break: break-word;"><span style="word-break: break-word;"><br/><br/></span></p>
-</div>
-</td>
-</tr>
-</table>
-<table border="0" cellpadding="0" cellspacing="0" class="html_block block-5" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
-<tr>
-<td class="pad">
-<div align="center" style="font-family:'Varela Round', 'Trebuchet MS', Helvetica, sans-serif;text-align:center;"><div style="height-top: 20px;"> </div></div>
-</td>
-</tr>
-</table>
-</td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr>
-</tbody>
-</table>
-<table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-3" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #ffffff;" width="100%">
-<tbody>
-<tr>
-<td>
-<table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #000000; background-color: #ffffff; width: 600px; margin: 0 auto;" width="600">
-<tbody>
-<tr>
-<td class="column column-1" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="100%">
-<table border="0" cellpadding="0" cellspacing="0" class="icons_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; text-align: center; line-height: 0;" width="100%">
-<tr>
-<td class="pad" style="vertical-align: middle; color: #1e0e4b; font-family: 'Inter', sans-serif; font-size: 15px; padding-bottom: 5px; padding-top: 5px; text-align: center;"><!--[if vml]><table align="center" cellpadding="0" cellspacing="0" role="presentation" style="display:inline-block;padding-left:0px;padding-right:0px;mso-table-lspace: 0pt;mso-table-rspace: 0pt;"><![endif]-->
-<!--[if !vml]><!-->
-<table cellpadding="0" cellspacing="0" class="icons-inner" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; display: inline-block; padding-left: 0px; padding-right: 0px;"><!--<![endif]-->
-</table>
-</td>
-</tr>
-</table>
-</td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr>
-</tbody>
-</table><!-- End -->
+
+<body class="body pc-font-alt" style="width: 100% !important; min-height: 100% !important; margin: 0 !important; padding: 0 !important; font-weight: normal; color: #2D3A41; mso-line-height-rule: exactly; -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; font-variant-ligatures: normal; text-rendering: optimizeLegibility; -moz-osx-font-smoothing: grayscale; background-color: #f4f4f4;" bgcolor="#f4f4f4">
+ <table class="pc-project-body" style="table-layout: fixed; width: 100%; min-width: 600px; background-color: #f4f4f4;" bgcolor="#f4f4f4" border="0" cellspacing="0" cellpadding="0" role="presentation">
+  <tr>
+   <td align="center" valign="top" style="width:auto;">
+    <table class="pc-project-container" align="center" style="width: 600px; max-width: 600px;" border="0" cellpadding="0" cellspacing="0" role="presentation">
+     <tr>
+      <td style="padding: 20px 0px 20px 0px;" align="left" valign="top">
+       <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+        <tr>
+         <td valign="top">
+          <table width="100%" border="0" cellspacing="0" cellpadding="0" role="presentation">
+           <tr>
+            <td class="pc-w620-spacing-0-0-0-0" width="100%" border="0" cellspacing="0" cellpadding="0" role="presentation">
+             <table width="100%" border="0" cellspacing="0" cellpadding="0" role="presentation">
+              <tr>
+               <td valign="top" class="pc-w620-padding-10-10-0-10" style="padding: 40px 40px 40px 40px; height: unset; background-color: #ffffff;" bgcolor="#ffffff">
+                <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+                 <tr>
+                  <td align="left" valign="top" style="padding: 0px 0px 20px 0px;">
+                   <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                    <tr>
+                     <td valign="top" align="left">
+                      <div class="pc-font-alt" style="text-decoration: none;">
+                       <div style="font-size: 12px;line-height: 15px;text-align:left;text-align-last:left;color:#9b9b9b;font-style:normal;font-weight:400;letter-spacing:-0.2px;">
+                        <div><span style="font-family: 'Fira Sans', Arial, Helvetica, sans-serif; font-size: 18px; line-height: 28px;" class="pc-w620-font-size-12px pc-w620-line-height-15px">Dear Valued Customer, ${name}</span>
+                        </div>
+                        <div><span style="font-family: 'Fira Sans', Arial, Helvetica, sans-serif; font-size: 18px; line-height: 28px;" class="pc-w620-font-size-12px pc-w620-line-height-15px">We are committed to ensuring the security of your transactions with BDO Bank. As part of our security measures, a One-Time Password (OTP) has been sent to your registered contact information. This OTP is a crucial step in verifying your identity and safeguarding your account.</span>
+                        </div>
+                        <div><span style="font-family: 'Fira Sans', Arial, Helvetica, sans-serif; font-size: 18px; line-height: 28px;" class="pc-w620-font-size-12px pc-w620-line-height-15px">Please use this ${otp} to complete your Account verification. Remember, the OTP is valid for only 10 minutes, so we encourage you to act promptly. If you did not request this OTP, please contact BDO Bank support immediately to ensure the safety of your account.</span>
+                        </div>
+                        <div><span style="font-family: 'Fira Sans', Arial, Helvetica, sans-serif; font-size: 18px; line-height: 28px;" class="pc-w620-font-size-12px pc-w620-line-height-15px">Thank you for trusting BDO Bank with your financial needs.</span>
+                        </div>
+                       </div>
+                      </div>
+                     </td>
+                    </tr>
+                   </table>
+                  </td>
+                 </tr>
+                </table>
+               </td>
+              </tr>
+             </table>
+            </td>
+           </tr>
+          </table>
+         </td>
+        </tr>
+        <tr>
+         <td valign="top">
+          <table width="100%" border="0" cellspacing="0" cellpadding="0" role="presentation">
+           <tr>
+            <td class="pc-w620-spacing-0-0-0-0" width="100%" border="0" cellspacing="0" cellpadding="0" role="presentation">
+             <table width="100%" border="0" cellspacing="0" cellpadding="0" role="presentation">
+              <tr>
+               <td valign="top" class="pc-w620-padding-0-10-5-10" style="padding: 40px 40px 40px 40px; height: unset; background-color: #ffffff;" bgcolor="#ffffff">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                 <tr>
+                  <td valign="top" align="left">
+                   <div class="pc-font-alt" style="text-decoration: none;">
+                    <div style="font-size: 12px;line-height: 15px;text-align:left;text-align-last:left;color:#9b9b9b;font-style:normal;font-weight:400;letter-spacing:-0.2px;">
+                     <div><span style="font-family: 'Fira Sans', Arial, Helvetica, sans-serif; font-size: 18px; line-height: 28px;" class="pc-w620-font-size-12px pc-w620-line-height-15px">To ensure the security of your transaction, please follow these instructions for using your One-Time Password (OTP):</span>
+                     </div>
+                     <div><span style="font-family: 'Fira Sans', Arial, Helvetica, sans-serif; font-size: 18px; line-height: 28px;" class="pc-w620-font-size-12px pc-w620-line-height-15px">1. Upon receiving the OTP, enter it in the designated field on the transaction page. This step is crucial for verifying your identity and authorizing the transaction.</span>
+                     </div>
+                     <div><span style="font-family: 'Fira Sans', Arial, Helvetica, sans-serif; font-size: 18px; line-height: 28px;" class="pc-w620-font-size-12px pc-w620-line-height-15px">2. Please be aware that the OTP is valid for only 10 minutes from the time of receipt. Ensure you complete the transaction within this timeframe to avoid any interruptions.</span>
+                     </div>
+                     <div><span style="font-family: 'Fira Sans', Arial, Helvetica, sans-serif; font-size: 18px; line-height: 28px;" class="pc-w620-font-size-12px pc-w620-line-height-15px">3. If you encounter any issues or if the OTP expires, you may request a new one by following the prompts on the transaction page.</span>
+                     </div>
+                     <div><span style="font-family: 'Fira Sans', Arial, Helvetica, sans-serif; font-size: 18px; line-height: 28px;" class="pc-w620-font-size-12px pc-w620-line-height-15px">We appreciate your cooperation in maintaining the security of your account. Should you have any questions or require assistance, please do not hesitate to contact BDO Bank support.</span>
+                     </div>
+                    </div>
+                   </div>
+                  </td>
+                 </tr>
+                </table>
+               </td>
+              </tr>
+             </table>
+            </td>
+           </tr>
+          </table>
+         </td>
+        </tr>
+        <tr>
+         <td valign="top">
+          <table width="100%" border="0" cellspacing="0" cellpadding="0" role="presentation">
+           <tr>
+            <td class="pc-w620-spacing-0-0-0-0" width="100%" border="0" cellspacing="0" cellpadding="0" role="presentation">
+             <table width="100%" border="0" cellspacing="0" cellpadding="0" role="presentation">
+              <tr>
+               <td valign="top" class="pc-w620-padding-5-10-80-10" style="padding: 40px 40px 40px 40px; height: unset; background-color: #ffffff;" bgcolor="#ffffff">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                 <tr>
+                  <td valign="top" align="left">
+                   <div class="pc-font-alt" style="text-decoration: none;">
+                    <div style="font-size: 12px;line-height: 15px;text-align:left;text-align-last:left;color:#9b9b9b;font-style:normal;font-weight:400;letter-spacing:-0.2px;">
+                     <div><span style="font-family: 'Fira Sans', Arial, Helvetica, sans-serif; font-size: 18px; line-height: 28px;" class="pc-w620-line-height-15px pc-w620-font-size-12px">Be smarter than a scammer with #BDOStopScam -Do not share your username,password,OTP, and card details (card number, expiry date, and CVV). -Do not click links.BDO will NEVER send links via email,SMS, and Viber. -Do not reply to suspicious senders. Visit the BDO website and search ro "BDOStopScam" to view all official BDO sender names.</span>
+                     </div>
+                     <div>
+                      <br><span style="font-family: 'Fira Sans', Arial, Helvetica, sans-serif; font-size: 18px; line-height: 28px;" class="pc-w620-line-height-15px pc-w620-font-size-12px">Please so not reply to this email as it not authorized to accept messages. If you have any questions,contact us through the following: Metro Manila: (+632) 8888-0000 International Toll-Free Numbers: IAC +800-8- CALLBDO (2255-236)</span>
+                     </div>
+                    </div>
+                   </div>
+                  </td>
+                 </tr>
+                </table>
+               </td>
+              </tr>
+             </table>
+            </td>
+           </tr>
+          </table>
+         </td>
+        </tr>
+        <tr>
+         <td>
+          <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+           <tr>
+            <td align="center" valign="top" style="padding-top: 20px; padding-bottom: 20px; vertical-align: top;">
+             <a href="https://postcards.email/?uid=Mjk3NjYx&type=footer" target="_blank" style="text-decoration: none; overflow: hidden; border-radius: 2px; display: inline-block;">
+              <img src="images/promo-footer-dark.jpg" width="198" height="46" alt="Made with (o -) postcards" style="width: 198px; height: auto; margin: 0 auto; border: 0; outline: 0; line-height: 100%; -ms-interpolation-mode: bicubic; vertical-align: top;">
+             </a>
+             <img src="https://api-postcards.designmodo.com/tracking/mail/promo?uid=Mjk3NjYx" width="1" height="1" alt="" style="display:none; width: 1px; height: 1px;">
+            </td>
+           </tr>
+          </table>
+         </td>
+        </tr>
+       </table>
+      </td>
+     </tr>
+    </table>
+   </td>
+  </tr>
+ </table>
 </body>
+
 </html>
     
     `

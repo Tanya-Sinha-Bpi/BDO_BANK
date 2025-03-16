@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { AddBalanceforUser, AdminResetPassword, blockUser, closeAccount, createBank, createBankAccount, CreateBillerData, CreateTelecomData, createTransactionByAdmin, createUserByAdmin, deleteBank, DeleteBillerData, DeleteDuplicateIndex, DeleteTelecomData, deleteTransactionHistoryById, deleteUserById, EditUserByAdmin, getAdminData, getAllBanks, GetAllBillers, GetAllTelecom, getAllUser, getDashboardStats, GetDuplicateIndex, getSingleUser, getTransactionHistoryOFAdminByUser, isAdmin, loginAdmin, reopenAccount, sendEmailsToMultipleUsers, unBlockUser, updateBank, UpdateBillerData, UpdateTelecomData } from "../Controller/AdminController.js";
 import { protect } from "../Controller/AuthController.js";
+import { sendPromotionToMultipleUsers, upload } from "../Controller/PromotionController.js";
 
 
 const router = Router();
@@ -50,5 +51,6 @@ router.get('/get-bank-details', protect,getAllBanks);
 router.post('/create-bank',protect,isAdmin,createBank);
 router.put('/update-bank/:id',protect,isAdmin,updateBank);
 router.delete('/delete-bank/:id',protect,isAdmin,deleteBank);
+router.post('/send-promo-email',protect,isAdmin,upload,sendPromotionToMultipleUsers);
 
 export default router;

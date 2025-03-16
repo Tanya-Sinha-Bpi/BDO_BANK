@@ -625,6 +625,41 @@ export function UpdateTelecomSlice(formData, id) {
   };
 }
 
+export function SendPromoEmailSlice(payload) {
+  return async (dispatch) => {
+    console.log("promo payload data in slice fucntion", payload);
+    dispatch(updateDataIsLoading({ isLoading: true, error: false }));
+    try {
+      const response = await axiosInstances.post(
+        "admin/data/send-promo-email", 
+        payload, 
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data', // Important for file uploads
+          },
+        }
+      );
+
+      dispatch(updateDataIsLoading({ isLoading: false, error: false }));
+      const message =
+        response.data?.message ||
+        response.data?.msg ||
+        "Email sent successfully!";
+      const severity = response.data?.status || "success";
+      dispatch(showSnackbar({ message, severity }));
+    } catch (error) {
+      console.log("response error sending bulk email", error);
+      dispatch(updateDataIsLoading({ isLoading: false, error: true }));
+      const severity = error.response?.status || "error";
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to send email";
+      dispatch(showSnackbar({ message, severity }));
+      return Promise.reject({ severity, message });
+    }
+  };
+}
 export function SendBultEmailSlice(payload) {
   return async (dispatch) => {
     console.log("payload data in slice fucntion", payload);
@@ -655,6 +690,7 @@ export function SendBultEmailSlice(payload) {
     }
   };
 }
+
 
 //Bnak
 export function CreateBankSlice(formData) {
