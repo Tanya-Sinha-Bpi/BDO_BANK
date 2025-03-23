@@ -56,6 +56,7 @@ const limiter = rateLimit({
           "https://frontend-5ctzwjj4x-amans-projects-74f8e6dc.vercel.app",
           "https://frontend-rose-seven-64.vercel.app",
           "https://www.bdoonline.online",
+          "http://localhost:8081"
         ],
       },
     })
@@ -72,6 +73,7 @@ const limiter = rateLimit({
     "https://frontend-5ctzwjj4x-amans-projects-74f8e6dc.vercel.app",
     "https://frontend-rose-seven-64.vercel.app",
     "https://www.bdoonline.online",
+    "http://localhost:8081"
   ];
 
   app.use(
