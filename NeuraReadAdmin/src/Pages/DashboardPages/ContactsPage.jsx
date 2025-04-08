@@ -518,7 +518,7 @@ const ContactsPage = () => {
 
                 {/* External Bank Name */}
                 {transaction.transactionType === "Withdraw" &&
-                  transaction.isExternal && (
+                  (
                     <TextField
                       fullWidth
                       label="External Bank Name"
