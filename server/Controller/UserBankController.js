@@ -618,7 +618,7 @@ export const getTransactionHistoryByID = async (req, res) => {
             .populate({
                 path: 'fromAccount',
                 model: UserBank,
-                select: 'accountName accountNumber bankName branchName accountType ifscCode balance',
+                select: 'accountName accountNumber bankName branchName accountType ifscCode balance adminExtBankName',
             });
 
         if (!transaction) {
@@ -646,6 +646,7 @@ export const getTransactionHistoryByID = async (req, res) => {
                     accountType: toAccount.accountType,
                     ifscCode: toAccount.ifscCode,
                     balance: toAccount.balance,
+                    extbankNamer:toAccount.adminExtBankName
                 }
                 : {
                     accountName: 'N/A',
@@ -655,6 +656,7 @@ export const getTransactionHistoryByID = async (req, res) => {
                     accountType: 'N/A',
                     ifscCode: 'N/A',
                     balance: 'N/A',
+                    extbankNamer:'N/A'
                 };
         } else {
             // External Bank transfer

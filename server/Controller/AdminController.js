@@ -458,7 +458,6 @@ export const createTransactionByAdmin = async (req, res, next) => {
       charges: 0, // Set any charges if needed
       adminExtBankName:extBankName
     });
-    console.log("saved date", new Date(date));
     // Save the transaction in the database
     await transaction.save();
 
