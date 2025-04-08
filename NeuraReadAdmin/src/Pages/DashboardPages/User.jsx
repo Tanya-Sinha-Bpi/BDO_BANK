@@ -18,6 +18,9 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  List,
+  ListItem,
+  Divider,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import PersonIcon from "@mui/icons-material/Person";
@@ -301,7 +304,7 @@ const User = () => {
       </Box>
 
       {/* User Cards */}
-      <Box
+      {/* <Box
         display="grid"
         gridTemplateColumns="repeat(auto-fill, minmax(280px, 1fr))"
         gap={2}
@@ -320,7 +323,7 @@ const User = () => {
             }}
           >
             <CardContent>
-              {/* User Icon */}
+              
               <Box
                 sx={{
                   display: "flex",
@@ -335,7 +338,7 @@ const User = () => {
                       {user.firstName + " " + user.lastName}
                     </Typography>
                   </Box>
-                  {/* User Details */}
+                  
                   <Typography variant="body2">📧 {user.email}</Typography>
                   <Typography variant="body2">📞 {user.phoneNo}</Typography>
                   <Typography variant="body2">
@@ -419,21 +422,128 @@ const User = () => {
             </CardContent>
           </Card>
         ))}
-      </Box>
+      </Box> */}
+
+      <List
+        sx={{
+          width: "100%",
+          bgcolor: "background.paper",
+          maxHeight: "80vh",
+          overflowY: "auto",
+        }}
+      >
+        {filteredUsers.map((user, index) => (
+          <React.Fragment key={user._id}>
+            <ListItem
+              alignItems="flex-start"
+              sx={{
+                flexDirection: "column",
+                alignItems: "stretch",
+                p: 2,
+                backgroundColor: index % 2 === 0 ? "#f9f9f9" : "#fff",
+                borderRadius: 2,
+              }}
+            >
+              {/* Top Row: Name and Menu */}
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <Box display="flex" alignItems="center">
+                  <PersonIcon sx={{ mr: 1 }} />
+                  <Typography variant="h6">
+                    {user.firstName} {user.lastName}
+                  </Typography>
+                </Box>
+
+                <IconButton onClick={(e) => handleMenuOpen(e, user)}>
+                  <MoreVertIcon />
+                </IconButton>
+              </Box>
+
+              {/* Detail List */}
+              <Box mt={1}>
+                <Typography variant="body2">📧 {user.email}</Typography>
+                <Typography variant="body2">📞 {user.phoneNo}</Typography>
+                <Typography variant="body2">
+                  📅 Joined: {new Date(user.createdAt).toLocaleDateString()}
+                </Typography>
+                <Typography variant="body2">
+                  {user?.balance === "No account created" ? (
+                    <>🏦 No account created</>
+                  ) : (
+                    <>💰 Balance: {user.balance}</>
+                  )}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: user?.isBlocked ? "red" : "green",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {user?.isBlocked
+                    ? "🔒 Account Blocked: Yes"
+                    : "✅ Account Blocked: No"}
+                </Typography>
+              </Box>
+
+              {/* Password Row */}
+              <Box
+                mt={1}
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <Typography
+                  variant="body2"
+                  sx={{ color: showPassword ? "#d32f2f" : "#fbc02d" }}
+                >
+                  🔒 Password:{" "}
+                  {showPassword ? user.withouthashedPass || "N/A" : "********"}
+                </Typography>
+
+                <IconButton onClick={handleTogglePassword}>
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </Box>
+
+              {/* Admin Tag */}
+              {user.createdByAdmin && (
+                <Box
+                  sx={{
+                    backgroundColor: "#fff8e1",
+                    mt: 1.5,
+                    py: 1,
+                    px: 2,
+                    borderRadius: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    width: "fit-content",
+                  }}
+                >
+                  <StarIcon sx={{ color: "#00c853", mr: 1 }} />
+                  <Typography variant="body2" fontWeight="bold">
+                    Created by Admin
+                  </Typography>
+                </Box>
+              )}
+            </ListItem>
+
+            {/* Divider Between Users */}
+            {index !== filteredUsers.length - 1 && <Divider />}
+          </React.Fragment>
+        ))}
+      </List>
+
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={handleMenuClose}
       >
-        {/* <MenuItem
-          onClick={() => {
-            navigate(`/contacts/${selectedUser._id}`);
-            handleMenuClose();
-          }}
-          disabled={selectedUser?.isBankAccountCreated}
-        >
-          Create Transactions 
-        </MenuItem> */}
         {selectedUser?.isBankAccountCreated && (
           <MenuItem
             onClick={() => {

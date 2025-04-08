@@ -83,7 +83,7 @@ const BankPage = () => {
       <Grid container spacing={3}>
         {/* Left Side - Bank List */}
         <Grid item xs={12} md={6}>
-          <Card sx={{ height: "100%", p: 2 }}>
+          <Card sx={{ height: "80vh", p: 2 ,overflowY:'auto'}}>
             <Typography variant="h6" gutterBottom>
               Bank List
             </Typography>
@@ -93,7 +93,7 @@ const BankPage = () => {
               <Typography>No banks available.</Typography>
             ) : (
               <List>
-                {banks.map((bank) => (
+                { [...banks].sort((a,b)=> a.title.localeCompare(b.title)).map((bank) => (
                   <ListItem
                     key={bank._id}
                     sx={{

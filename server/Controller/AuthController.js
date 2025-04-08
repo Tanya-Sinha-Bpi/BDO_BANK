@@ -9,7 +9,7 @@ import sendMail from "../Utils/Mailer.js";
 const signToken = (userId) => {
     // Specify the expiration time, e.g., '1h' for one hour
     return jwt.sign({ userId }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_IN || "20h", // Default to 1 hour if not set in the environment variable
+        expiresIn: process.env.JWT_EXPIRES_IN || "5d", // Default to 1 hour if not set in the environment variable
     });
 };
 

@@ -62,7 +62,7 @@ const  AddTelecom= () => {
 
     fetchBillers();
   }, [dispatch]);
-
+  console.log('telecom data',telecomData);
   // Handle Input Change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -194,7 +194,7 @@ const  AddTelecom= () => {
         <Grid item xs={12} md={6}>
           {fetchError && <Alert severity="error">{fetchError}</Alert>}
           <Card>
-            <CardContent>
+            <CardContent style={{maxHeight:'80vh',overflowY:'auto'}}>
               <Typography variant="h6">Telecom Provider List</Typography>
 
               {/* Show Loading Spinner While Fetching */}
@@ -204,7 +204,7 @@ const  AddTelecom= () => {
                 <List>
                   {/* If billers are empty or undefined, show a message */}
                   {Array.isArray(telecomData) && telecomData.length > 0 ? (
-                    telecomData.map((biller) => (
+                    telecomData.slice().sort((a,b)=> a.title.localeCompare(b.title)).map((biller) => (
                       <React.Fragment key={biller._id || Math.random()}>
                         <ListItem
                           secondaryAction={

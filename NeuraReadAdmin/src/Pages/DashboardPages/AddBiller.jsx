@@ -190,7 +190,7 @@ const AddBiller = () => {
         <Grid item xs={12} md={6}>
           {fetchError && <Alert severity="error">{fetchError}</Alert>}
           <Card>
-            <CardContent>
+            <CardContent sx={{maxHeight:'80vh',overflowY:'auto'}}>
               <Typography variant="h6">Billers List</Typography>
 
               {/* Show Loading Spinner While Fetching */}
@@ -200,7 +200,7 @@ const AddBiller = () => {
                 <List>
                   {/* If billers are empty or undefined, show a message */}
                   {Array.isArray(billerData) && billerData.length > 0 ? (
-                    billerData.map((biller) => (
+                    billerData.slice().sort((a,b)=> a.title.localeCompare(b.title)).map((biller) => (
                       <React.Fragment key={biller._id || Math.random()}>
                         <ListItem
                           secondaryAction={
