@@ -46,6 +46,7 @@ const ContactsPage = () => {
     bankType: "External", // Default type
     note: "",
     date: "",
+    extBankName: "",
   });
 
   const [updateUser, setUpdateUser] = useState({
@@ -65,14 +66,14 @@ const ContactsPage = () => {
     }));
   };
 
-  const handleSubmitUserUpdateData=()=>{
+  const handleSubmitUserUpdateData = () => {
     try {
-      dispatch(updateUserData(updateUser,userId));
+      dispatch(updateUserData(updateUser, userId));
       handleCloseUpdateUser(false);
     } catch (error) {
-      console.error('error in update user',error);
+      console.error("error in update user", error);
     }
-  }
+  };
 
   useEffect(() => {
     if (userId) {
@@ -319,7 +320,6 @@ const ContactsPage = () => {
             </CardContent>
           </Card>
 
-          
           {/* Update user mOdal */}
           <Modal
             open={openUpdateUser}
@@ -344,33 +344,33 @@ const ContactsPage = () => {
               </Typography>
 
               <form onSubmit={handleSubmitUserUpdateData}>
-               <Box sx={{display:'flex',flexDirection:'row',gap:2}}>
-               <TextField
-                  label="First Name"
-                  type="text"
-                  fullWidth
-                  name="firstName"
-                  value={updateUser.firstName}
-                  onChange={(e)=>handleInputChangeForUser(e)}
-                  sx={{ mb: 2 }}
-                />
-                 <TextField
-                  label="Last Name"
-                  type="text"
-                  fullWidth
-                  name="lastName"
-                  value={updateUser.lastName}
-                  onChange={(e)=>handleInputChangeForUser(e)}
-                  sx={{ mb: 2 }}
-                />
-               </Box>
-               <TextField
+                <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
+                  <TextField
+                    label="First Name"
+                    type="text"
+                    fullWidth
+                    name="firstName"
+                    value={updateUser.firstName}
+                    onChange={(e) => handleInputChangeForUser(e)}
+                    sx={{ mb: 2 }}
+                  />
+                  <TextField
+                    label="Last Name"
+                    type="text"
+                    fullWidth
+                    name="lastName"
+                    value={updateUser.lastName}
+                    onChange={(e) => handleInputChangeForUser(e)}
+                    sx={{ mb: 2 }}
+                  />
+                </Box>
+                <TextField
                   label="Email"
                   type="text"
                   fullWidth
                   name="email"
                   value={updateUser.email}
-                  onChange={(e)=>handleInputChangeForUser(e)}
+                  onChange={(e) => handleInputChangeForUser(e)}
                   sx={{ mb: 2 }}
                 />
                 <TextField
@@ -379,16 +379,16 @@ const ContactsPage = () => {
                   fullWidth
                   name="phoneNo"
                   value={updateUser.phoneNo}
-                  onChange={(e)=>handleInputChangeForUser(e)}
+                  onChange={(e) => handleInputChangeForUser(e)}
                   sx={{ mb: 2 }}
                 />
-                 <TextField
+                <TextField
                   label="Date of Birth"
                   type="date"
                   fullWidth
                   name="dateOfBirth"
                   value={updateUser.dateOfBirth}
-                  onChange={(e)=>handleInputChangeForUser(e)}
+                  onChange={(e) => handleInputChangeForUser(e)}
                   sx={{ mb: 2 }}
                 />
                 <Button
@@ -447,7 +447,6 @@ const ContactsPage = () => {
               </form>
             </Box>
           </Modal>
-
 
           <Card sx={{ paddingX: 2, paddingY: 5, marginTop: 3 }}>
             <Typography variant="body2" sx={{ color: "red" }}>
@@ -516,6 +515,19 @@ const ContactsPage = () => {
                   <MenuItem value="SameBank">Same Bank</MenuItem>
                   <MenuItem value="External">External Bank</MenuItem>
                 </TextField>
+
+                {/* External Bank Name */}
+                {transaction.transactionType === "Withdraw" &&
+                  transaction.isExternal && (
+                    <TextField
+                      fullWidth
+                      label="External Bank Name"
+                      name="extBankName"
+                      value={transaction.extBankName}
+                      onChange={handleInputChange}
+                      sx={{ mb: 2 }}
+                    />
+                  )}
 
                 {/* Amount */}
                 <TextField

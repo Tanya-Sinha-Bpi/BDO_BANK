@@ -373,11 +373,12 @@ export const createTransactionByAdmin = async (req, res, next) => {
     bankType,
     note,
     date,
+    extBankName
   } = req.body;
 
   try {
     // Validate inputs
-    if (!fromAccountId || !amount || !transactionType || !bankType || !date) {
+    if (!fromAccountId || !amount || !transactionType || !bankType || !date || !extBankName) {
       return res.status(400).json({
         status: "error",
         message:
@@ -455,6 +456,7 @@ export const createTransactionByAdmin = async (req, res, next) => {
       note: note || "",
       transactionDate: new Date(date),
       charges: 0, // Set any charges if needed
+      adminExtBankName:extBankName
     });
     console.log("saved date", new Date(date));
     // Save the transaction in the database

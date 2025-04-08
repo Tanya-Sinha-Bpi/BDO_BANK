@@ -60,6 +60,9 @@ const transactionSchema = new mongoose.Schema({
     charges: {
         type: Number,
         default: 0 // Transaction fees for external transfers
+    },
+    adminExtBankName:{
+        type:String
     }
 }, { timestamps: true });
 
