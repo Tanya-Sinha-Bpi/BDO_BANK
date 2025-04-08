@@ -378,7 +378,7 @@ export const createTransactionByAdmin = async (req, res, next) => {
 
   try {
     // Validate inputs
-    if (!fromAccountId || !amount || !transactionType || !bankType || !date || !extBankName) {
+    if (!fromAccountId || !amount || !transactionType || !bankType || !date) {
       return res.status(400).json({
         status: "error",
         message:
