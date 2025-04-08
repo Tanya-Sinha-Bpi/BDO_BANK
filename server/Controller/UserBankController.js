@@ -308,7 +308,7 @@ export const getBankAccountDetails = async (req, res) => {
                 ifscCode: userBank.ifscCode,
                 balance: userBank.balance,
                 createdAt: userBank.createdAt,
-                isBlocked:userBank.userId.isBlocked,
+                isBlocked: userBank.userId.isBlocked,
             },
         })
     } catch (error) {
@@ -603,3 +603,73 @@ export const updateProfileUser = async (req, res) => {
     }
 }
 
+export const getTransactionHistoryByID = async (req, res) => {
+    try {
+        const { transactionId } = req.params;
+
+        const transaction = await Transaction.findOne({ transactionId })
+            .populate({
+                path: 'fromAccount',
+                model: UserBank,
+                select: 'accountName accountNumber bankName branchName accountType ifscCode balance',
+            });
+
+        if (!transaction) {
+            return res.status(404).json({
+                status: 'error',
+                message: 'Transaction not found',
+            });
+        }
+
+        // Construct receiver details
+        let receiverDetails;
+
+        if (transaction.bankType === 'SameBank') {
+            const toAccount = await UserBank.findById(transaction.toAccount).select(
+                'accountName accountNumber bankName branchName accountType ifscCode balance'
+            );
+
+            receiverDetails = toAccount
+                ? {
+                    accountName: toAccount.accountName,
+                    accountNumber: toAccount.accountNumber,
+                    bankName: toAccount.bankName,
+                    branchName: toAccount.branchName,
+                    accountType: toAccount.accountType,
+                    ifscCode: toAccount.ifscCode,
+                    balance: toAccount.balance,
+                }
+                : {
+                    accountName: 'N/A',
+                    accountNumber: 'N/A',
+                    bankName: 'N/A',
+                    branchName: 'N/A',
+                    accountType: 'N/A',
+                    ifscCode: 'N/A',
+                    balance: 'N/A',
+                };
+        } else {
+            // External Bank transfer
+            receiverDetails = {
+                accountName: transaction.externalBankDetails?.accountName || 'N/A',
+                accountNumber: transaction.externalBankDetails?.accountNumber || 'N/A',
+                bankName: transaction.externalBankDetails?.bankName || 'N/A',
+                ifscCode: transaction.externalBankDetails?.ifscCode || 'N/A',
+            };
+        }
+
+        return res.status(200).json({
+            status: 'success',
+            transaction: {
+                ...transaction.toObject(),
+                receiverDetails,
+            },
+        });
+    } catch (error) {
+        console.error('Error fetching transaction by ID:', error);
+        return res.status(500).json({
+            status: error,
+            message: error.message || 'Something went wrong while fetching transaction details',
+        });
+    }
+}
