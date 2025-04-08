@@ -607,6 +607,13 @@ export const getTransactionHistoryByID = async (req, res) => {
     try {
         const { transactionId } = req.params;
 
+        if (!req.params.transactionId) {
+            return res.status(400).json({
+                status: 'error',
+                message: 'Transaction Id Not Found'
+            });
+        }
+
         const transaction = await Transaction.findOne({ transactionId })
             .populate({
                 path: 'fromAccount',
@@ -624,9 +631,10 @@ export const getTransactionHistoryByID = async (req, res) => {
         // Construct receiver details
         let receiverDetails;
 
-        if (transaction.bankType === 'SameBank') {
+        if (transaction.bankType === 'SameBank' && mongoose.Types.ObjectId.isValid(transaction.toAccount)) {
+            // Only attempt to fetch if the ID is valid
             const toAccount = await UserBank.findById(transaction.toAccount).select(
-                'accountName accountNumber bankName branchName accountType ifscCode balance'
+              'accountName accountNumber bankName branchName accountType ifscCode balance'
             );
 
             receiverDetails = toAccount
