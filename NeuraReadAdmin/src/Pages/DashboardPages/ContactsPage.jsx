@@ -125,6 +125,7 @@ const ContactsPage = () => {
       bankType: transaction.bankType,
       note: transaction.note,
       date: transaction.date,
+      extBankName:transaction.extBankName
     };
     console.log("submitted data", transactionData);
     // Dispatch the action to create a transaction

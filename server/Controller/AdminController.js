@@ -364,7 +364,7 @@ export const loginAdmin = async (req, res, next) => {
 };
 
 export const createTransactionByAdmin = async (req, res, next) => {
-  console.log("recieved date", req.body.date);
+  console.log("recieved data", req.body);
   const {
     fromAccountId,
     toAccountDetails, // External bank details if external transfer
