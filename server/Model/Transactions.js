@@ -20,6 +20,7 @@ const transactionSchema = new mongoose.Schema({
         ifscCode: { type: String },
         accountNumber: { type: String },
         accountName: { type: String },
+        adminExtBankName:{type:String},
     },
     amount: {
         type: Number,
@@ -54,9 +55,9 @@ const transactionSchema = new mongoose.Schema({
         type: Number,
         default: 0 // Transaction fees for external transfers
     },
-    adminExtBankName:{
-        type:String
-    }
+    // adminExtBankName:{
+    //     type:String
+    // }
 }, { timestamps: true });
 
 const Transaction = mongoose.model('Transaction', transactionSchema);

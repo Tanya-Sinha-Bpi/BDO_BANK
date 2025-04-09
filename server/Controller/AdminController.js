@@ -373,8 +373,9 @@ export const createTransactionByAdmin = async (req, res, next) => {
     bankType,
     note,
     date,
-    extBankName
   } = req.body;
+
+  const extBankName = toAccountDetails?.extBankName;
 
   try {
     // Validate inputs
@@ -443,29 +444,53 @@ export const createTransactionByAdmin = async (req, res, next) => {
     }
 
     // Create a new Transaction
+    // const transaction = new Transaction({
+    //   transactionId: `TXN-${Date.now()}`, // Can be adjusted based on your needs
+    //   fromAccount: userBank._id, // Set the from account as the UserBank ID
+    //   toAccount: bankType === "External" ? toAccountDetails : userBank._id, // If external, save external details
+    //   // externalBankDetails:
+    //   //   bankType === "External" ? toAccountDetails : undefined,
+    //   externalBankDetails:
+    //   bankType === "External"
+    //     ? { ...toAccountDetails, adminExtBankName: extBankName }
+    //     : undefined,
+    //   amount: transactionAmount,
+    //   transactionType: transactionType,
+    //   bankType: bankType,
+    //   status: "Success", // Set status to success for simplicity, you can handle failed transactions as well
+    //   note: note || "",
+    //   transactionDate: new Date(date),
+    //   charges: 0, // Set any charges if needed
+    //   // adminExtBankName:extBankName
+    // });
     const transaction = new Transaction({
-      transactionId: `TXN-${Date.now()}`, // Can be adjusted based on your needs
-      fromAccount: userBank._id, // Set the from account as the UserBank ID
-      toAccount: bankType === "External" ? toAccountDetails : userBank._id, // If external, save external details
-      externalBankDetails:
-        bankType === "External" ? toAccountDetails : undefined,
+      transactionId: `TXN-${Date.now()}`,
+      fromAccount: userBank._id,
+      toAccount: bankType === "External" ? toAccountDetails.accountNumber : userBank._id, // Or use some unique string
+      externalBankDetails: bankType === "External"
+        ? {
+            ...toAccountDetails,
+            adminExtBankName: extBankName
+          }
+        : undefined,
       amount: transactionAmount,
-      transactionType: transactionType,
-      bankType: bankType,
-      status: "Success", // Set status to success for simplicity, you can handle failed transactions as well
+      transactionType,
+      bankType,
+      status: "Success",
       note: note || "",
       transactionDate: new Date(date),
-      charges: 0, // Set any charges if needed
-      adminExtBankName:extBankName
+      charges: 0
     });
+    
     // Save the transaction in the database
     await transaction.save();
-
+    console.log('after created transaction data',transaction);
     return res.status(201).json({
       status: "success",
       message: "Transaction created successfully.",
       data: transaction,
     });
+    
   } catch (error) {
     console.error(error);
     return res.status(500).json({
