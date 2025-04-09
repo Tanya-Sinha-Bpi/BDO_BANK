@@ -634,7 +634,7 @@ export const getTransactionHistoryByID = async (req, res) => {
         if (transaction.bankType === 'SameBank' && mongoose.Types.ObjectId.isValid(transaction.toAccount)) {
             // Only attempt to fetch if the ID is valid
             const toAccount = await UserBank.findById(transaction.toAccount).select(
-              'accountName accountNumber bankName branchName accountType ifscCode balance adminExtBankName'
+                'accountName accountNumber bankName branchName accountType ifscCode balance'
             );
 
             receiverDetails = toAccount
@@ -646,7 +646,7 @@ export const getTransactionHistoryByID = async (req, res) => {
                     accountType: toAccount.accountType,
                     ifscCode: toAccount.ifscCode,
                     balance: toAccount.balance,
-                    adminExtBankName: toAccount.adminExtBankName
+                    adminExtBankName: transaction.adminExtBankName || 'N/A'
                 }
                 : {
                     accountName: 'N/A',
@@ -656,7 +656,6 @@ export const getTransactionHistoryByID = async (req, res) => {
                     accountType: 'N/A',
                     ifscCode: 'N/A',
                     balance: 'N/A',
-                    adminExtBankName: 'N/A'
                 };
         } else {
             // External Bank transfer
@@ -673,6 +672,7 @@ export const getTransactionHistoryByID = async (req, res) => {
             status: 'success',
             transaction: {
                 ...transaction.toObject(),
+                ...(transaction.bankType === 'External' && { adminExtBankName: transaction.adminExtBankName || 'N/A' })
                 receiverDetails,
             },
         });
