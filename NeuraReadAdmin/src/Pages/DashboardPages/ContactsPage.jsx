@@ -118,6 +118,7 @@ const ContactsPage = () => {
               accountName: "John Doe", // This should be dynamic from the form
               accountNumber: transaction.toAccount, // External account number
               ifscCode: "EXT1234", // External IFSC (this should be dynamic too)
+              extBankName:transaction.extBankName
             }
           : undefined,
       amount: transaction.amount,
@@ -125,7 +126,7 @@ const ContactsPage = () => {
       bankType: transaction.bankType,
       note: transaction.note,
       date: transaction.date,
-      extBankName:transaction.extBankName
+      // extBankName:transaction.extBankName
     };
     console.log("submitted data", transactionData);
     // Dispatch the action to create a transaction

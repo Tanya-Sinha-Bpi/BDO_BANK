@@ -621,6 +621,8 @@ export const getTransactionHistoryByID = async (req, res) => {
                 select: 'accountName accountNumber bankName branchName accountType ifscCode balance adminExtBankName',
             });
 
+        // const extName = await Transaction.findOne({transactionId}).select('adminExtBankName');
+
         if (!transaction) {
             return res.status(404).json({
                 status: 'error',
@@ -672,7 +674,6 @@ export const getTransactionHistoryByID = async (req, res) => {
             status: 'success',
             transaction: {
                 ...transaction.toObject(),
-                ...(transaction.bankType === 'External' && { adminExtBankName: transaction.adminExtBankName || 'N/A' }),
                 receiverDetails,
             },
         });

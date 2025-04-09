@@ -11,13 +11,6 @@ const transactionSchema = new mongoose.Schema({
         ref: 'UserBank',
         required: true
     },
-    // toAccount: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'UserBank',
-    //     required: function () {
-    //         return this.transactionType === 'SameBankTransfer'; // Required only for internal transfers
-    //     }
-    // },
     toAccount: {
         type: mongoose.Schema.Types.Mixed,  // Can be ObjectId (SameBank) or String (External)
         required: true
