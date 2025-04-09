@@ -672,7 +672,7 @@ export const getTransactionHistoryByID = async (req, res) => {
             status: 'success',
             transaction: {
                 ...transaction.toObject(),
-                ...(transaction.bankType === 'External' && { adminExtBankName: transaction.adminExtBankName || 'N/A' })
+                ...(transaction.bankType === 'External' && { adminExtBankName: transaction.adminExtBankName || 'N/A' }),
                 receiverDetails,
             },
         });
